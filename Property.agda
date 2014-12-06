@@ -2,9 +2,9 @@ open import Level
 open import CancellativeAbelianMonoid
 
 module Property
-(a l : Level) 
-(m : CancellativeAbelianMonoid a l)
-where
+  (a l : Level) 
+  (m : CancellativeAbelianMonoid a l)
+  where
 
 open import Algebra
 open import Algebra.FunctionProperties

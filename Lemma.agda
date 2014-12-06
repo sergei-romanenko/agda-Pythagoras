@@ -2,8 +2,9 @@ open import Level
 
 open import CancellativeAbelianMonoid
 
-module Lemma (a l : Level) (m : CancellativeAbelianMonoid a l)
-where
+module Lemma
+  (a l : Level) (m : CancellativeAbelianMonoid a l)
+  where
 
 {-
 The original proof is written by Thierry Coquand.

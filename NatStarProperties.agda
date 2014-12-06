@@ -21,16 +21,23 @@ open import NatStar
   succ m + (n + o)
   ∎
 
+m+1≡1+m : ∀ m → m + one ≡ succ m
+m+1≡1+m one = refl
+m+1≡1+m (succ m) = cong succ (m+1≡1+m m)
+
 m+1+n≡1+m+n : ∀ m n → m + succ n ≡ succ (m + n)
 m+1+n≡1+m+n one n = refl
 m+1+n≡1+m+n (succ m) n = cong succ (m+1+n≡1+m+n m n)
 
 +-comm : Commutative _≡_ _+_
 +-comm one one = refl
-+-comm one (succ n) = sym (cong succ (+-comm n one))
-+-comm (succ m) n = begin
-  succ (m + n) ≡⟨ cong succ (+-comm m n) ⟩
-  succ (n + m) ≡⟨ sym (m+1+n≡1+m+n n m) ⟩
++-comm one (succ n) = cong succ (sym $ m+1≡1+m n)
++-comm (succ m) n =
+ begin
+  succ (m + n)
+    ≡⟨ cong succ (+-comm m n) ⟩
+  succ (n + m)
+    ≡⟨ sym $ m+1+n≡1+m+n n m ⟩
   n + succ m
   ∎
 

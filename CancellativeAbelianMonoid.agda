@@ -15,8 +15,10 @@ open import Relation.Binary
 import Cancel
 
 record IsCancellativeAbelianMonoid 
-         {a l} {A : Set a} (≈ : Rel A l) (_∙_ : Op₂ A)
-         (ε : A) : Set (a ⊔ l) where
+  {a l} {A : Set a} (≈ : Rel A l) (_∙_ : Op₂ A)
+  (ε : A) : Set (a ⊔ l)
+  where
+
   open FunctionProperties ≈
   open Cancel ≈
   field
