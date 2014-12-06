@@ -7,37 +7,40 @@ http://www.cs.ru.nl/~freek/comparison/comparison.pdf
 
 open import Agda.Primitive
 open import Data.Product
+open import Data.Empty
 open import Relation.Binary.Core
 open import Relation.Nullary
 open import Relation.Unary
 
-Noether : ∀ {a l} -> (A : Set a) -> (R : Rel A l) -> Set (lsuc l ⊔ a)
-Noether {_} {l} A R 
-  = (P : Pred A l) -> 
-    ((x : A) -> ((y : A) -> R y x -> P y) -> P x) -> (z : A) -> P z
+open import Function
+
+Noether : ∀ {a l} (A : Set a) (_>_ : Rel A l) → Set (lsuc l ⊔ a)
+Noether {_} {l} A _>_ =
+  (P : Pred A l) → 
+  (∀ x → (∀ y → y > x → P y) → P x) → ∀ z → P z
 
 -- The principle of infinite descent, following Fermat
 -- http://en.wikipedia.org/wiki/Infinite_descent
-infiniteDescent : ∀ {a l} -> (A : Set a) -> (R : Rel A l) ->
-                  (P : Pred A l) -> Noether A R -> 
-                  ((x : A) -> P x -> ∃ (λ y -> R y x × P y)) -> 
-                  (z : A) -> ¬ (P z)
-infiniteDescent A R P noe f
-    = noe (λ w → ¬ P w) g
-      where g : (x : A) → ((y : A) → R y x → ¬ P y) → ¬ P x 
-            g x h px with f x px
-            ... | (v , k) = h v (proj₁ k) (proj₂ k)
+infiniteDescent : ∀ {a l} (A : Set a) (_>_ : Rel A l) (P : Pred A l) →
+                  Noether A _>_ → 
+                  (∀ x → P x → ∃ (λ y → y > x × P y)) → 
+                  ∀ z → ¬ (P z)
+infiniteDescent A _>_ P noe f =
+  noe (¬_ ∘  P) helper
+  where helper : ∀ x → (∀ y → y > x → ¬ P y) → ¬ P x
+        helper x h px with f x px
+        ... | y , y>x , py = h y y>x py
 
 -- original proofs
 {-
-∃-elim : ∀ {a b c} -> {A : Set a} -> {B : A -> Set b} -> {C : Set c}
-          (f : ∃ B) -> (g : (x : A) -> B x -> C) -> C
+∃-elim : ∀ {a b c} → {A : Set a} → {B : A → Set b} → {C : Set c}
+          (f : ∃ B) → (g : (x : A) → B x → C) → C
 ∃-elim (proj₁ , proj₂) g = g proj₁ proj₂
 
-×-elimLeft : ∀ {a b} -> {A : Set a} -> {B : Set b} -> A × B -> A
+×-elimLeft : ∀ {a b} → {A : Set a} → {B : Set b} → A × B → A
 ×-elimLeft (proj₁ , proj₂) = proj₁
 
-×-elimRight : ∀ {a b} -> {A : Set a} -> {B : Set b} -> A × B -> B
+×-elimRight : ∀ {a b} → {A : Set a} → {B : Set b} → A × B → B
 ×-elimRight (proj₁ , proj₂) = proj₂
 
 infiniteDescent A R P h1 h2 x 
