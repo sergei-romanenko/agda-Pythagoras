@@ -7,4 +7,5 @@ import Property
 import Lemma
 import NatStar
 import NatStarProperties
+import Theorem
 import Corollary
