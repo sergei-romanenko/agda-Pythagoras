@@ -5,13 +5,13 @@ The original proof is written by Thierry Coquand.
 http://www.cs.ru.nl/~freek/comparison/comparison.pdf
 -}
 
-open import Level
+open import Agda.Primitive
 open import Data.Product
 open import Relation.Binary.Core
 open import Relation.Nullary
 open import Relation.Unary
 
-Noether : ∀ {a l} -> (A : Set a) -> (R : Rel A l) -> Set (suc l ⊔ a)
+Noether : ∀ {a l} -> (A : Set a) -> (R : Rel A l) -> Set (lsuc l ⊔ a)
 Noether {_} {l} A R 
   = (P : Pred A l) -> 
     ((x : A) -> ((y : A) -> R y x -> P y) -> P x) -> (z : A) -> P z

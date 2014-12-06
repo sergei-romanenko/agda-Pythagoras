@@ -1,4 +1,4 @@
-open import Level
+open import Agda.Primitive
 open import CancellativeAbelianMonoid
 
 module Property

@@ -9,7 +9,7 @@ open import Algebra
 import Algebra.FunctionProperties as FunctionProperties
 open import Algebra.Structures
 open FunctionProperties
-open import Level
+open import Agda.Primitive
 open import Relation.Binary
 
 import Cancel
@@ -27,7 +27,7 @@ record IsCancellativeAbelianMonoid
 
   open IsCommutativeMonoid isCommutativeMonoid public
 
-record CancellativeAbelianMonoid c l : Set (suc (c ⊔ l)) where
+record CancellativeAbelianMonoid c l : Set (lsuc (c ⊔ l)) where
   infixl 7 _∙_
   infix  4 _≈_
   field

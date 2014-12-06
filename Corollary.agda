@@ -5,7 +5,7 @@ open import Function
 import Algebra.FunctionProperties as FunctionProperties
 open FunctionProperties
 open import Algebra.Structures
-open import Level
+open import Agda.Primitive
 open import Relation.Binary.Core
 open import Relation.Binary.PropositionalEquality
   as PropEq
@@ -26,7 +26,7 @@ isCancellativeAbelianMonoid
     ; cancel = cancel-*-left
     }
 
-m : CancellativeAbelianMonoid Level.zero Level.zero
+m : CancellativeAbelianMonoid lzero lzero
 m = record {
       Carrier = NatStar
     ; _≈_ = _≡_
@@ -37,9 +37,9 @@ m = record {
 
 open import Noether
 import Property
-open Property Level.zero Level.zero m
+open Property lzero lzero m
 import Theorem 
-open Theorem Level.zero m
+open Theorem lzero m
 
 -- the original proof of 'two is prime' is written
 -- by Nils Anders Danielsson
@@ -47,12 +47,12 @@ open Theorem Level.zero m
 
 -- lemma1 : 2 isPrime
 -- lemma1 = {!!}
-postulate lemma1 : (succ one) isPrime
+postulate lemma1 : (suc one) isPrime
 
 -- lemma2 : Noether Carrier (multiple 2)
 -- lemma2 = {!!}
-postulate lemma2 : Noether Carrier (multiple (succ one))
+postulate lemma2 : Noether Carrier (multiple (suc one))
 
-corollary : (succ one) isNotSquare
-corollary = theorem (succ one) lemma1 lemma2
+corollary : (suc one) isNotSquare
+corollary = theorem (suc one) lemma1 lemma2
 
