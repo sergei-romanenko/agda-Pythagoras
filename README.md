@@ -1,4 +1,4 @@
-#Sqrt 2 is not rational
+# Sqrt 2 is not rational
 
 **Author:** Ikegami Daisuke <ikegami.da@gmail.com>
 
@@ -6,7 +6,7 @@
 
 Works with the Agda standard library.
 
-###Links:
+### Links:
 
 * Agda
 > <http://wiki.portal.chalmers.se/agda/pmwiki.php>
@@ -19,8 +19,11 @@ Works with the Agda standard library.
 * Other proofs by another different proof assistants
 > <http://www.cs.ru.nl/~freek/comparison/>
 
-###Files:
+### Files:
 
+* `Noether.agda`
+> The definitions of Noetherian and Fermat's infinite descent
+> principle.
 * `Cancel.agda`
 > The definition of cancel.
 * `CancellativeAbelianMonoid.agda`
@@ -35,9 +38,6 @@ Works with the Agda standard library.
 > A set of natural numbers without zero, and its multiplication.
 * `NatStarProperties.agda`
 > Properties of NatStar.
-* `Noether.agda`
-> The definitions of Noetherian and Fermat's infinite descent
-> principle.
 * `Property.agda`
 > Helper functions of a cancellative abelian monoid.
 * `Theorem.agda`
@@ -45,5 +45,6 @@ Works with the Agda standard library.
 > any prime cannot be a square of rational in cancellative
 > abelian monoid.
 
-###Note:
+### Note:
+
 `agda.alfa` was written by Thierry Coquand.
