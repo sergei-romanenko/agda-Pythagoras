@@ -18,13 +18,18 @@ import Property
 -- A lemma for the proof of the main theorem in `Theorem.agda`.
 import Lemma
 
--- A set of natural numbers without zero, and its multiplication.
-import NatStar
--- Properties of NatStar.
-import NatStarProperties
 -- The main theorem which is originally proved by Thierry Coquand:
 -- any prime cannot be a square of rational in cancellative
 -- abelian monoid.
 import Theorem
 
+-- A set of natural numbers without zero, and its multiplication.
+import NatStar
+
+-- Properties of NatStar.
+import NatStarProperties
+
+-- The set of the natural numbers without zero and  multiplication
+-- forms a cancellative abelian modoid.
+-- Thus, square root of two is irrational.
 import Corollary

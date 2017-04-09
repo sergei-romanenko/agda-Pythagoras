@@ -30,10 +30,10 @@ Carrier = CancellativeAbelianMonoid.Carrier m
 infixl 7 _∙_
 infix  4 _≈_
 
-_≈_ : Carrier -> Carrier -> Set l
+_≈_ : Carrier → Carrier → Set l
 _≈_ = CancellativeAbelianMonoid._≈_ m
 
-_∙_ : Carrier -> Carrier -> Carrier
+_∙_ : Carrier → Carrier → Carrier
 _∙_ = CancellativeAbelianMonoid._∙_ m
 
 ε : Carrier
@@ -91,17 +91,17 @@ cancel : Cancel _≈_ _∙_
 cancel = IsCancellativeAbelianMonoid.cancel 
          (CancellativeAbelianMonoid.isCancellativeAbelianMonoid m)
 
-square : (x : Carrier) -> Carrier
+square : (x : Carrier) → Carrier
 square x = x ∙ x
 
-multiple : (p : Carrier) -> Rel Carrier l
-multiple p = λ (x y : Carrier) -> (p ∙ x) ≈ y 
+multiple : (p : Carrier) → Rel Carrier l
+multiple p = λ (x y : Carrier) → (p ∙ x) ≈ y 
 
 _divides_ : Rel Carrier (l ⊔ a)
 x divides y = ∃ (λ z → (x ∙ z) ≈ y)
 
 _isPrime : Pred Carrier (l ⊔ a)
-p isPrime = (x y : Carrier) -> p divides (x ∙ y) ->
+p isPrime = (x y : Carrier) → p divides (x ∙ y) →
             (p divides x) ⊎ (p divides y)
 
 Square : Rel Carrier (l ⊔ a)

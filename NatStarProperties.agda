@@ -61,7 +61,7 @@ m+1+n≡1+m+n (suc m) n = cong suc (m+1+n≡1+m+n m n)
   suc m * (n * o)
   ∎
 
-*-one : ∀ n -> n * one ≡ n
+*-one : ∀ n → n * one ≡ n
 *-one one = refl
 *-one (suc m) = cong suc (*-one m)
 
@@ -100,19 +100,19 @@ m*1+n≡m+mn (suc m) n = begin
   ; comm      = *-comm
   }
 
-pred : NatStar -> NatStar
+pred : NatStar → NatStar
 pred one = one
 pred (suc m) = m
 
-≡-suc-elim : ∀ x y -> suc x ≡ suc y -> x ≡ y
+≡-suc-elim : ∀ x y → suc x ≡ suc y → x ≡ y
 ≡-suc-elim x y p = cong pred p
 
-cancel-+-left : ∀ x y z -> z + x ≡ z + y -> x ≡ y
+cancel-+-left : ∀ x y z → z + x ≡ z + y → x ≡ y
 cancel-+-left x y one p = ≡-suc-elim x y p
 cancel-+-left x y (suc z) p 
   = cancel-+-left x y z (cong pred p)
 
-cancel-+-right : ∀ x y z -> x + z ≡ y + z -> x ≡ y
+cancel-+-right : ∀ x y z → x + z ≡ y + z → x ≡ y
 cancel-+-right x y z p 
   = cancel-+-left x y z q
       where q : z + x ≡ z + y
@@ -123,17 +123,17 @@ cancel-+-right x y z p
               z + y
               ∎
 
-+-⊥-right : ∀ x y -> x ≡ x + y -> ⊥
++-⊥-right : ∀ x y → x ≡ x + y → ⊥
 +-⊥-right one y ()
 +-⊥-right (suc x) y p 
   = +-⊥-right x y (≡-suc-elim x (x + y) p)
 
-+-⊥-left : ∀ x y -> x + y ≡ x -> ⊥
++-⊥-left : ∀ x y → x + y ≡ x → ⊥
 +-⊥-left one y ()
 +-⊥-left (suc x) y p 
   = +-⊥-left x y (≡-suc-elim (x + y) x p)
 
-cancel-*-right : ∀ x y z -> x * z ≡ y * z -> x ≡ y
+cancel-*-right : ∀ x y z → x * z ≡ y * z → x ≡ y
 cancel-*-right one one z p = refl
 cancel-*-right one (suc y) one p with begin
   one ≡⟨ p ⟩
@@ -152,10 +152,10 @@ cancel-*-right (suc x) (suc y) z p
   = cong suc (cancel-*-right x y z 
       (cancel-+-left (x * z) (y * z) z p))
 
-cancel-*-left : ∀ x y z -> z * x ≡ z * y -> x ≡ y
+cancel-*-left : ∀ x y z → z * x ≡ z * y → x ≡ y
 cancel-*-left x y z p 
   = cancel-*-right x y z (lemma x y z p)
-  where lemma : ∀ x y z -> z * x ≡ z * y -> x * z ≡ y * z
+  where lemma : ∀ x y z → z * x ≡ z * y → x * z ≡ y * z
         lemma x y z p = begin
           x * z ≡⟨ *-comm x z ⟩
           z * x ≡⟨ p ⟩

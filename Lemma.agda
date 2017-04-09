@@ -24,19 +24,19 @@ open P
 
 open EqReasoning (≈-setoid)
 
-∃-elim : ∀ {a b c} {A : Set a} {B : A -> Set b} 
-             {C : Set c} ->
-          ∃ B -> ((x : A) -> B x -> C) -> C
+∃-elim : ∀ {a b c} {A : Set a} {B : A → Set b} 
+             {C : Set c} →
+          ∃ B → ((x : A) → B x → C) → C
 ∃-elim (proj₁ , proj₂) f = f proj₁ proj₂
 
-∙-congLeft : (x y z : Carrier) -> y ≈ z -> (y ∙ x) ≈ (z ∙ x)
+∙-congLeft : (x y z : Carrier) → y ≈ z → (y ∙ x) ≈ (z ∙ x)
 ∙-congLeft x y z p = ∙-cong p ≈-refl
 
-∙-congRight : (x y z : Carrier) -> y ≈ z -> (x ∙ y) ≈ (x ∙ z)
+∙-congRight : (x y z : Carrier) → y ≈ z → (x ∙ y) ≈ (x ∙ z)
 ∙-congRight x y z p = ∙-cong ≈-refl p
 
 -- required by proof of lemma3
-lemma2 : (x y z : Carrier) -> (x ∙ (y ∙ z)) ≈ (y ∙ (x ∙ z))
+lemma2 : (x y z : Carrier) → (x ∙ (y ∙ z)) ≈ (y ∙ (x ∙ z))
 lemma2 x y z = begin
   (x ∙ (y ∙ z)) ≈⟨ comm x (y ∙ z) ⟩ 
   (y ∙ z) ∙ x   ≈⟨ assoc y z x ⟩ 
@@ -46,7 +46,7 @@ lemma2 x y z = begin
   ∎
 
 -- required by proof of lemma4
-lemma3 : (x y z : Carrier) -> 
+lemma3 : (x y z : Carrier) → 
          (x ∙ (x ∙ (square y))) ≈ square (x ∙ y)
 lemma3 x y z = begin
    (x ∙ (x ∙ (square y))) 
@@ -56,7 +56,7 @@ lemma3 x y z = begin
    ∎
 
 -- required by proof of lemma6
-lemma4 : (x y z : Carrier) -> ((x ∙ z) ≈ y) ->
+lemma4 : (x y z : Carrier) → ((x ∙ z) ≈ y) →
          (x ∙ (x ∙ square z)) ≈ square y
 lemma4 x y z p = begin
   x ∙ (x ∙ square z) ≈⟨ lemma3 x z z ⟩
@@ -65,30 +65,30 @@ lemma4 x y z p = begin
   ∎
 
 -- required by proof of lemma6
-lemma5 : (w x y z : Carrier) -> ((w ∙ x) ≈ z) ->
-         ((w ∙ y) ≈ z) -> (x ≈ y)
+lemma5 : (w x y z : Carrier) → ((w ∙ x) ≈ z) →
+         ((w ∙ y) ≈ z) → (x ≈ y)
 lemma5 w x y z p q =
   cancel x y w (≈-trans p (≈-sym q))
 
 -- required by proof of lemma8
-lemma6 : (w x y z : Carrier) -> 
-         ((w ∙ (square x)) ≈ square y) -> (w ∙ z) ≈ y ->
+lemma6 : (w x y z : Carrier) → 
+         ((w ∙ (square x)) ≈ square y) → (w ∙ z) ≈ y →
          (w ∙ (square z)) ≈ square x
 lemma6 w x y z s t 
   = lemma5 w (w ∙ square z) (square x) (square y) 
            (lemma4 w y z t) s
 
 -- required by proof of lemma8
-lemma7 : (p x : Carrier) -> p isPrime ->
-         p divides (square x) -> p divides x
+lemma7 : (p x : Carrier) → p isPrime →
+         p divides (square x) → p divides x
 --lemma7 p x s t = ⊎-elim (λ y → y) (λ y → y) (s x x t)
 lemma7 p x s t = [ id , id ]′ (s x x t)
 -- can we prove above without ⊎-elim?
 
 -- required by proof of lemma9
-lemma8 : (p x y : Carrier) -> p isPrime ->
-         (((p ∙ square x)) ≈ square y) ->
-         ∃ (λ z -> ((p ∙ z) ≈ y) × ((p ∙ square z) ≈ square x))
+lemma8 : (p x y : Carrier) → p isPrime →
+         (((p ∙ square x)) ≈ square y) →
+         ∃ (λ z → ((p ∙ z) ≈ y) × ((p ∙ square z) ≈ square x))
 lemma8 p x y s t =
   ∃-elim rem 
          (λ w u → w , (u , (lemma6 p x y w t u)))
@@ -97,9 +97,9 @@ lemma8 p x y s t =
 -- can we prove above without ∃-elim?
 
 -- needed for the theorem
-lemma9 : (p : Carrier) -> (h2 : p isPrime) -> (x : Carrier) ->
-         (h3 : Square p x) -> 
-         ∃ (λ (x1 : Carrier) -> ((p ∙ x1 ≈ x) × Square p x1))
+lemma9 : (p : Carrier) → (h2 : p isPrime) → (x : Carrier) →
+         (h3 : Square p x) → 
+         ∃ (λ (x1 : Carrier) → ((p ∙ x1 ≈ x) × Square p x1))
 lemma9 p h2 x h3 
   = ∃-elim h3 (λ y h4 → 
                 ∃-elim (lemma8 p x y h2 h4) 

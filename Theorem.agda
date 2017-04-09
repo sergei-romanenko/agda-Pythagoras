@@ -26,8 +26,12 @@ import Property
 module R = Property a a m
 open R
 
+-- The main theorem which is originally proved by Thierry Coquand:
+-- any prime cannot be a square of rational in cancellative
+-- abelian monoid.
 -- the main theorem
-theorem : (p : Carrier) -> (p isPrime) -> Noether Carrier (multiple p) -> 
+
+theorem : (p : Carrier) → (p isPrime) → Noether Carrier (multiple p) → 
           (p isNotSquare)
 theorem p h1 h2
   = let rem : (z : Carrier) → ¬ Square p z
