@@ -1,4 +1,7 @@
 *.agdai
+*.vo
+*.vo.aux
+*.glob
 *~
 *#
 .#*
