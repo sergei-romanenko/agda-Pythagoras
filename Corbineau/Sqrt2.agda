@@ -11,22 +11,29 @@
 module Sqrt2 where
 
 open import Data.Nat
+  using (ℕ; zero; suc; _+_; _*_; ⌊_/2⌋; _<′_; ≤′-refl; _≟_)
 open import Data.Nat.Properties.Simple
+  using (+-suc; +-assoc; *-comm; distribʳ-*-+; +-right-identity)
 open import Data.Nat.Properties
+  using (s≤′s; ⌊n/2⌋≤′n)
 open import Data.Sum as Sum
-open import Data.Product as Prod
+  using (_⊎_; inj₁; inj₂; [_,_]′)
 open import Data.Empty
-open import Data.Unit
-  using (⊤; tt)
+  using (⊥; ⊥-elim)
 
 open import Function
-open import Function.Related as Related
+  using (_∘_; _$_)
+import Function.Related as Related
 
 open import Relation.Nullary
+  using (Dec; yes; no; ¬_)
 open import Relation.Binary.PropositionalEquality as P
+  using (_≡_; _≢_; refl; cong; cong₂; subst; sym; module ≡-Reasoning)
 
 open import Induction.WellFounded
+  using (Acc; acc)
 open import Induction.Nat
+  using (<-well-founded)
 
 infixr 8 2*_
 infixl 9 _^2
@@ -83,7 +90,7 @@ n ^2 = n * n
   2* (n * m)
     ≡⟨⟩
   n * m + n * m
-    ≡⟨ sym (distribʳ-*-+ m n n) ⟩
+    ≡⟨ sym $ distribʳ-*-+ m n n ⟩
   (n + n) * m
     ≡⟨ *-comm (n + n) m ⟩
   m * (n + n)
@@ -124,12 +131,18 @@ even-2* zero =
   even0
 even-2* (suc zero) =
   even1 (odd1 even0)
-even-2* (suc (suc n))
-  rewrite sym $ 2*-suc (suc n)
-        | sym $ 2*-suc n
-        | +-suc n (suc n)
-        | +-suc n n
-  = even1 (odd1 (even1 (odd1 (even-2* n))))
+even-2* (suc (suc n)) =
+  Even (2* n)
+    ∼⟨ even1 ∘ odd1 ⟩
+  Even (suc (suc (2*  n)))
+    ≡⟨ cong Even (P.sym $ 2*-suc n) ⟩
+  Even (2* (suc n))
+    ∼⟨ even1 ∘ odd1 ⟩
+  Even (suc (suc (2* (suc n))))
+    ≡⟨ cong Even (P.sym $ 2*-suc (suc n)) ⟩
+  Even (2* suc (suc n))
+  ∎ $ even-2* n
+  where open Related.EquationalReasoning
 
 even-2*/2 : ∀ {n} → Even n → 2* ⌊ n /2⌋ ≡ n
 even-2*/2 even0 = refl
@@ -190,6 +203,10 @@ even-4*[/2^2] n even-n = begin
   ∎
   where open ≡-Reasoning
 
+^2-≡0 :  ∀ {n} → n ^2 ≡ 0 → n ≡ 0
+^2-≡0 {zero} n^2≡0 = refl
+^2-≡0 {suc n} ()
+
 /2<′ : ∀ n → n ≢ 0 → ⌊ n /2⌋ <′ n
 /2<′ zero n≢0 = ⊥-elim (n≢0 refl)
 /2<′ (suc zero) n≢0 = ≤′-refl
@@ -206,10 +223,12 @@ even-4*[/2^2] n even-n = begin
 descent : ∀ m p → m ^2 ≡ 2* (p ^2) → Acc _<′_ m → p ≡ 0
 
 descent m p m^2≡2*p^2 a with m ≟ 0
-descent m p m^2≡2*p^2 a | yes m≡0 rewrite m≡0 with p
-... | zero = refl
-... | suc p′ with m^2≡2*p^2
-... | ()
+
+descent m p m^2≡2*p^2 a | yes m≡0 rewrite m≡0 =
+  2* (p ^2) ≡ 0 ∼⟨ 2*-inj ⟩ p ^2 ≡ 0 ∼⟨ ^2-≡0 ⟩ p ≡ 0
+  ∎ $ P.sym m^2≡2*p^2
+  where open Related.EquationalReasoning
+
 descent m p m^2≡2*p^2 (acc rs) | no m≢0 =
   p≡0
   where
@@ -218,15 +237,13 @@ descent m p m^2≡2*p^2 (acc rs) | no m≢0 =
   q = ⌊ p /2⌋
 
   even-m : Even m
-  even-m = (
-    ⊤
-      ∼⟨ const $ even-2* (p ^2) ⟩
+  even-m =
     Even (2* (p ^2))
       ≡⟨ cong Even (P.sym $ m^2≡2*p^2) ⟩
     Even (m ^2)
       ∼⟨ even^2 ⟩
     Even m
-    ∎) tt
+    ∎ $ even-2* (p ^2)
     where open Related.EquationalReasoning
 
   4*n^2≡m^2 : 2* 2* (n ^2) ≡ m ^2
@@ -234,27 +251,20 @@ descent m p m^2≡2*p^2 (acc rs) | no m≢0 =
 
   4*n^2≡2*p^2 : 2* 2* (n ^2) ≡ 2* (p ^2)
   4*n^2≡2*p^2 = begin
-    2* 2* (n ^2)
-      ≡⟨ 4*n^2≡m^2 ⟩
-    m ^2
-      ≡⟨ m^2≡2*p^2 ⟩
-    2* (p ^2)
-    ∎
+    2* 2* (n ^2) ≡⟨ 4*n^2≡m^2 ⟩ m ^2 ≡⟨ m^2≡2*p^2 ⟩ 2* (p ^2) ∎
     where open ≡-Reasoning
 
   2*n^2≡p^2 : 2* (n ^2) ≡ p ^2
   2*n^2≡p^2 = 2*-inj 4*n^2≡2*p^2
 
   even-p : Even p
-  even-p = (
-    ⊤
-      ∼⟨ const $ even-2* (n ^2) ⟩
+  even-p =
     Even (2* (n ^2))
       ≡⟨ cong Even  2*n^2≡p^2  ⟩
     Even (p ^2)
       ∼⟨ even^2 ⟩
     Even p
-    ∎) tt
+    ∎ $ even-2* (n ^2)
     where open Related.EquationalReasoning
 
   4*n^2≡8*q^2 : 2* 2* (n ^2) ≡ 2* 2* 2* (q ^2)
@@ -275,14 +285,7 @@ descent m p m^2≡2*p^2 (acc rs) | no m≢0 =
 
   p≡0 : p ≡ 0
   p≡0 = begin
-    p
-      ≡⟨ sym $ even-2*/2 even-p ⟩
-    2* q
-      ≡⟨ cong 2*_ q≡0 ⟩
-    2* 0
-      ≡⟨⟩
-    0
-    ∎
+    p ≡⟨ sym $ even-2*/2 even-p ⟩ 2* q ≡⟨ cong 2*_ q≡0 ⟩ 2* 0 ≡⟨⟩ 0 ∎
     where open ≡-Reasoning
 
 --  There is no m and n such that
