@@ -8,7 +8,7 @@
   Hence, sqrt 2 is irrational.
 -}
 
-module Sqrt2 where
+module Corbineau.Sqrt2 where
 
 open import Data.Nat
   using (ℕ; zero; suc; _+_; _*_; ⌊_/2⌋; _<′_; ≤′-refl; _≟_)

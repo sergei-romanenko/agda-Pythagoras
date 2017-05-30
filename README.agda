@@ -30,3 +30,22 @@ import NatPlus
 -- forms a cancellative abelian modoid.
 -- Thus, the square root of two is irrational.
 import Corollary
+
+----
+---- Miscellanea
+----
+
+-- There is no m and n such that
+--   n ≢ 0 and m^2 ≡ 2*n^2
+-- Hence, sqrt 2 is irrational.
+
+-- The proof in Coq has been originally written by Pierre Corbineau
+-- http://www-verimag.imag.fr/~corbinea/ftp/programs/sqrt2.v
+
+import Corbineau.Sqrt2
+
+-- 2 is prime.
+-- Originally written by Nils Anders Danielsson
+-- https://lists.chalmers.se/pipermail/agda/2011/003464.html
+
+import Danielsson.2IsPrime
