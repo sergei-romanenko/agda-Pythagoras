@@ -44,16 +44,26 @@ infixl 9 _^2
 _^2 : ℕ → ℕ
 n ^2 = n * n
 
+2*-suc : ∀ n → 2* (suc n) ≡ suc (suc (2* n))
+2*-suc n =
+  2* (suc n)
+    ≡⟨⟩
+  suc (n + suc n)
+    ≡⟨ cong suc (+-suc n n) ⟩
+  suc (suc (n + n))
+    ≡⟨⟩
+  suc (suc (2* n))
+  ∎
+  where open ≡-Reasoning
+
 [2*]/2 : ∀ n → ⌊ 2* n /2⌋ ≡ n
 [2*]/2 zero = refl
 [2*]/2 (suc n) = begin
   ⌊ 2* (suc n) /2⌋
+    ≡⟨ cong ⌊_/2⌋ (2*-suc n) ⟩
+  ⌊ suc (suc (2* n)) /2⌋
     ≡⟨⟩
-  ⌊ suc (n + suc n) /2⌋
-    ≡⟨ cong (⌊_/2⌋ ∘ suc) (+-suc n n) ⟩
-  ⌊ suc (suc (n + n)) /2⌋
-    ≡⟨⟩
-  suc ⌊ n + n /2⌋
+  suc ⌊ (2* n) /2⌋
     ≡⟨ cong suc ([2*]/2 n) ⟩
   suc n
   ∎
@@ -68,18 +78,6 @@ n ^2 = n * n
   ⌊ 2* n /2⌋
     ≡⟨ [2*]/2 n ⟩
   n
-  ∎
-  where open ≡-Reasoning
-
-2*-suc : ∀ n → 2* (suc n) ≡ suc (suc (2* n))
-2*-suc n =
-  2* (suc n)
-    ≡⟨⟩
-  suc (n + suc n)
-    ≡⟨ cong suc (+-suc n n) ⟩
-  suc (suc (n + n))
-    ≡⟨⟩
-  suc (suc (2* n))
   ∎
   where open ≡-Reasoning
 

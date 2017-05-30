@@ -62,17 +62,17 @@ pos-2* : ∀ x → Pos (2 * x) → Pos x
 pos-2* zero ()
 pos-2* (suc x) tt = tt
 
-divides⇒∣ : (x : ℕ) (p : Pos x) → 2⁺ divides (n⁺ x  p) → 2∣ x
-divides⇒∣ x p (n⁺ y q , h) =
+divides⇒∣ : (x : ℕ) (p : Pos x) → 2⁺ divides (x ,  p) → 2∣ x
+divides⇒∣ x p ((y , q) , h) =
   y , cong fromℕ⁺ h
 
-∣⇒divides : (x : ℕ) (p : Pos x) → 2∣ x → 2⁺ divides (n⁺ x p)
+∣⇒divides : (x : ℕ) (p : Pos x) → 2∣ x → 2⁺ divides (x , p)
 ∣⇒divides x p (z , 2*z≡x)
   rewrite sym 2*z≡x
-  = n⁺ z (pos-2* z p) , ≈⁺⇒≡ refl
+  = (z , pos-2* z p) , ≈⁺⇒≡ refl
 
 lemma1 : 2⁺ isPrime
-lemma1 (n⁺ x p) (n⁺ y q) h
+lemma1 (x , p) (y , q) h
   with divides⇒∣ (x * y) (pos* x p y q) h
 ... | 2∣x*y with 2∣*⊎ {x} {y} 2∣x*y
 ... | inj₁ 2∣x = inj₁ (∣⇒divides x p 2∣x)
@@ -107,12 +107,12 @@ prop P f n p = prop′ P f n p (<-well-founded n)
 lemma2′ : (P : ℕ⁺ → Set) →
   ((m : ℕ⁺) → ((k : ℕ⁺) → 2⁺ ⊛ k ≡ m → P k) → P m) →
   (n : ℕ⁺) (a : Acc _<′_ (fromℕ⁺ n)) → P n
-lemma2′ P f (n⁺ x p) (acc rs) with  2∣? x
-... | no ¬∃k→2*k≡x = f (n⁺ x p) help
-  where help : (k : ℕ⁺) → 2⁺ ⊛ k ≡ n⁺ x p → P k
-        help (n⁺ z r) 2⊛k≡n = ⊥-elim (¬∃k→2*k≡x (z , cong fromℕ⁺ 2⊛k≡n))
+lemma2′ P f (x , p) (acc rs) with  2∣? x
+... | no ¬∃k→2*k≡x = f (x , p) help
+  where help : (k : ℕ⁺) → 2⁺ ⊛ k ≡ (x , p) → P k
+        help (z , r) 2⊛k≡n = ⊥-elim (¬∃k→2*k≡x (z , cong fromℕ⁺ 2⊛k≡n))
 ... | yes (k , 2*k≡x) =
-  f (n⁺ x p) (λ {(n⁺ l s) ≡n → lemma2′ P f (n⁺ l s)
+  f (x , p) (λ {(l , s) ≡n → lemma2′ P f (l , s)
     (rs l (subst (_<′_ l) (cong fromℕ⁺ ≡n) (<′2* l s)))})
 
 lemma2 : Noether Carrier (multiple 2⁺)

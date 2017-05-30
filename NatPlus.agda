@@ -26,38 +26,40 @@ Pos : ℕ → Set
 Pos zero = ⊥
 Pos (suc n) = ⊤
 
+infixr 4 _,_
+
 data ℕ⁺ : Set where
-  n⁺ : (x : ℕ) (p : Pos x) → ℕ⁺
+  _,_ : (x : ℕ) (p : Pos x) → ℕ⁺
 
 fromℕ⁺ : ℕ⁺ → ℕ
-fromℕ⁺ (n⁺ x p) = x
+fromℕ⁺ (x , p) = x
 
 pred⁺ : ℕ⁺ → ℕ
-pred⁺ (n⁺ zero ())
-pred⁺ (n⁺ (suc x) p) = x
+pred⁺ (zero , ())
+pred⁺ (suc x , p) = x
 
 1⁺ : ℕ⁺
-1⁺ = n⁺ 1 tt
+1⁺ = 1 , tt
 
 2⁺ : ℕ⁺
-2⁺ = n⁺ 2 tt
+2⁺ = 2 , tt
 
 infix 4 _≈⁺_
 
 _≈⁺_ : (m n : ℕ⁺) → Set
-n⁺ x p ≈⁺ n⁺ y q = x ≡ y
+(x , p) ≈⁺ (y , q) = x ≡ y
 
 irrel-pos : ∀ {x : ℕ} → (p q : Pos x) → p ≡ q
 irrel-pos {zero} () ()
 irrel-pos {suc x} tt tt = refl
 
 ≈⁺⇒≡ : ∀ {m n} → m ≈⁺ n → m ≡ n
-≈⁺⇒≡ {n⁺ x p} {n⁺ .x q} refl
+≈⁺⇒≡ {x , p} {.x , q} refl
   rewrite irrel-pos p q
   = refl
 
 ≡⇒≈⁺ : ∀ {m n} → m ≡ n → m ≈⁺ n
-≡⇒≈⁺ {n⁺ x p} refl = refl
+≡⇒≈⁺ {x , p} refl = refl
 
 pos+ : ∀ x → Pos x → ∀ y → Pos (x + y)
 pos+ zero () y
@@ -72,21 +74,21 @@ infixl 6 _⊕_
 infixl 7 _⊛_
 
 _⊕_ : (m n : ℕ⁺) → ℕ⁺
-n⁺ x p ⊕ n⁺ y q = n⁺ (x + y) (pos+ x p y)
+(x , p) ⊕ (y , q) = x + y , pos+ x p y
 
 _⊛_ : (m n : ℕ⁺) → ℕ⁺
-n⁺ x p ⊛ n⁺ y q = n⁺ (x * y) (pos* x p y q)
+(x , p) ⊛ (y , q) = x * y , pos* x p y q
 
 ⊛-assoc : Associative _≡_ _⊛_
-⊛-assoc (n⁺ x p) (n⁺ y q) (n⁺ z r) =
+⊛-assoc (x , p) (y , q) (z , r) =
   ≈⁺⇒≡ $ *-assoc x y z
 
 ⊛-leftIdentity : ∀ n → 1⁺ ⊛ n ≡ n
-⊛-leftIdentity (n⁺ x p) =
+⊛-leftIdentity (x , p) =
   ≈⁺⇒≡ $ +-right-identity x
 
 ⊛-comm : ∀ m n → m ⊛ n ≡  n ⊛ m
-⊛-comm (n⁺ x p) (n⁺ y q) =
+⊛-comm (x , p) (y , q) =
   ≈⁺⇒≡ $ *-comm x y
 
 
@@ -144,9 +146,9 @@ cancel-*-left x y z =
   where open Related.EquationalReasoning
 
 cancel-⊛-left : ∀ m n k → k ⊛ m ≡ k ⊛ n → m ≡ n
-cancel-⊛-left (n⁺ x p) (n⁺ y q) (n⁺ zero ()) h
-cancel-⊛-left (n⁺ x p) (n⁺ y q) (n⁺ (suc z′) tt) h
+cancel-⊛-left (x , p) (y , q) (zero , ()) h
+cancel-⊛-left (x , p) (y , q) (suc z′ , tt) h
   with ≡⇒≈⁺ h
 ... | sz′*x≡sz′*y with cancel-*-left x y z′ sz′*x≡sz′*y
 ... | x≡y rewrite x≡y
-  = cong (n⁺ y) (irrel-pos p q)
+  = cong (_,_ y) (irrel-pos p q)
