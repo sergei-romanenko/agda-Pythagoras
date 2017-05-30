@@ -23,13 +23,17 @@ import Lemma
 -- abelian monoid.
 import Theorem
 
+-- Some properties of ℕ
+import 2Divides
+
 -- A set of natural numbers without zero, and its multiplication.
 import NatStar
+import NatPlus
 
 -- Properties of NatStar.
 import NatStarProperties
 
--- The set of the natural numbers without zero and  multiplication
+-- The set of the natural numbers without zero and with multiplication
 -- forms a cancellative abelian modoid.
--- Thus, square root of two is irrational.
+-- Thus, the square root of two is irrational.
 import Corollary

@@ -124,7 +124,7 @@ even⊎odd : ∀ n → Even n ⊎ Odd n
 even⊎odd zero =
   inj₁ even0
 even⊎odd (suc n) =
-  ([ inj₂ , inj₁ ]′ ∘ Sum.map odd1 even1) (even⊎odd n)
+  [ inj₂ ∘ odd1 , inj₁ ∘ even1 ]′ $ even⊎odd n
 
 even-2* : ∀ n → Even (2* n)
 even-2* zero =
@@ -132,17 +132,20 @@ even-2* zero =
 even-2* (suc zero) =
   even1 (odd1 even0)
 even-2* (suc (suc n)) =
-  Even (2* n)
-    ∼⟨ even1 ∘ odd1 ⟩
-  Even (suc (suc (2*  n)))
-    ≡⟨ cong Even (P.sym $ 2*-suc n) ⟩
-  Even (2* (suc n))
-    ∼⟨ even1 ∘ odd1 ⟩
-  Even (suc (suc (2* (suc n))))
-    ≡⟨ cong Even (P.sym $ 2*-suc (suc n)) ⟩
-  Even (2* suc (suc n))
-  ∎ $ even-2* n
-  where open Related.EquationalReasoning
+  step $ even-2* n
+  where
+  open Related.EquationalReasoning hiding (sym)
+  step =
+    Even (2* n)
+      ∼⟨ even1 ∘ odd1 ⟩
+    Even (suc (suc (2*  n)))
+      ≡⟨ cong Even (P.sym $ 2*-suc n) ⟩
+    Even (2* (suc n))
+      ∼⟨ even1 ∘ odd1 ⟩
+    Even (suc (suc (2* (suc n))))
+      ≡⟨ cong Even (sym $ 2*-suc (suc n)) ⟩
+    Even (2* suc (suc n))
+    ∎
 
 even-2*/2 : ∀ {n} → Even n → 2* ⌊ n /2⌋ ≡ n
 even-2*/2 even0 = refl
