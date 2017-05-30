@@ -1,8 +1,5 @@
 module README where
 
--- 2 is prime: a short proof by Danielsson.
-import 2IsPrime
-
 -- The definitions of Noetherian and Fermat's infinite descent principle.
 import Noether
 
@@ -26,12 +23,8 @@ import Theorem
 -- Some properties of ℕ
 import 2Divides
 
--- A set of natural numbers without zero, and its multiplication.
-import NatStar
+-- A set of natural numbers without zero.
 import NatPlus
-
--- Properties of NatStar.
-import NatStarProperties
 
 -- The set of the natural numbers without zero and with multiplication
 -- forms a cancellative abelian modoid.

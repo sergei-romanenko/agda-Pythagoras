@@ -1,10 +1,11 @@
 # Sqrt 2 is not rational
 
-**Author:** Ikegami Daisuke <ikegami.da@gmail.com>
+**Written by:** Ikegami Daisuke <ikegami.da@gmail.com>  
+**Revised by:** Sergei Romanenko <sergei.romanenko@supercompilers.com>
 
-**An example:** Translate Agda1/Alfa (written by Thierry Coquand) to Agda2
+**The original proof** (in Agda1/Alfa) is due to Thierry Coquand.
 
-Works with the Agda standard library.
+This version tries to exploit the the Agda standard library.
 
 ### Links:
 
@@ -21,8 +22,7 @@ Works with the Agda standard library.
 
 ### Files:
 
-* `2IsPrime`  
-  2 is prime: a short proof by Danielsson.
+---
 
 * `Noether.agda`  
   The definitions of Noetherian and Fermat's infinite descent principle.
@@ -44,13 +44,19 @@ Works with the Agda standard library.
   any prime cannot be a square of rational in cancellative
   abelian monoid.
 
-* `NatStar.agda`  
-  A set of natural numbers without zero, and its multiplication.
+---
 
-* `NatStarProperties.agda`  
-  Properties of NatStar.
+* `2Divides`  
+  Some properties of natural numbers (with zero).
+
+* `NatPlus.agda`  
+  A set of natural numbers without zero.
+
+---
 
 * `Corollary.agda`  
   The set of the natural numbers without zero and  multiplication
-  forms a cancellative abelian monoid.
-  Thus, square root of two is irrational.
+  forms a cancellative abelian monoid.  
+  Thus, the square root of two is irrational.
+
+---
