@@ -6,7 +6,7 @@ open import Algebra.Structures
 open import Data.Nat as ℕ
   using (ℕ; zero; suc; pred; _+_; _*_; _<_; _≤_; z≤n; s≤s)
 open import Data.Nat.Properties.Simple
-  using (+-suc; +-assoc; *-comm; distribʳ-*-+; +-right-identity; *-assoc)
+  using (+-assoc; *-comm; +-right-identity; *-assoc)
 open import Data.Nat.Properties
   using (≤-steps)
 open import Data.Product as Prod

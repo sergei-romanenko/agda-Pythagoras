@@ -3,7 +3,7 @@ module 2Divides where
 open import Data.Nat
   using (ℕ; zero; suc; pred; _+_; _*_)
 open import Data.Nat.Properties.Simple
-  using (+-suc; +-assoc; *-comm; distribʳ-*-+; +-right-identity)
+  using (+-suc; +-assoc; +-right-identity)
 open import Data.Product as Prod
 open import Data.Sum as Sum
 open import Data.Empty
@@ -31,27 +31,14 @@ even⊎odd zero =
 even⊎odd (suc n) =
   [ inj₂ ∘ odd1 , inj₁ ∘ even1 ]′ $ even⊎odd n
 
-
-2*≡+ : ∀ n → 2 * n ≡ n + n
-2*≡+ n =
-  2 * n
-    ≡⟨⟩
-  n + (n + 0)
-    ≡⟨ cong (_+_ n) (+-right-identity n) ⟩
-  n + n
-  ∎
-  where open ≡-Reasoning
-
-2*-suc : ∀ n → 2 * (suc n) ≡ suc (suc (2 * n))
+2*-suc : ∀ n → 2 * suc n ≡ suc (suc (2 * n))
 2*-suc n =
-  2 * (suc n)
-    ≡⟨ 2*≡+ (suc n) ⟩
-  suc n + suc n
+  2 * suc n
     ≡⟨⟩
-  suc (n + suc n)
-    ≡⟨ cong suc (+-suc n n) ⟩
-  suc (suc (n + n))
-    ≡⟨ cong (suc ∘ suc) (sym $ 2*≡+ n) ⟩
+  suc (n + suc (n + zero))
+    ≡⟨ cong suc (+-suc n (n + zero)) ⟩
+  suc (suc (n + (n + zero)))
+    ≡⟨⟩
   suc (suc (2 * n))
   ∎
   where open ≡-Reasoning
@@ -90,7 +77,7 @@ odd-even* {_} {n} (odd1 (even1 {m} odd-m)) =
   Even (n + (n + m * n))
     ≡⟨ cong Even (sym $ +-assoc n n (m * n)) ⟩
   Even ((n + n) + m * n)
-    ≡⟨ cong (Even ∘ flip _+_ (m * n)) (sym $ 2*≡+ n) ⟩
+    ≡⟨ cong (λ l → Even ((n + l) + m * n)) (sym $ +-right-identity n) ⟩
   Even (2 * n + m * n)
     ∼⟨ even-even+ (even-2* n) ⟩
   Even (m * n)
@@ -116,13 +103,7 @@ even⇒2∣ {suc (suc k)} (even1 (odd1 even-k))
   2*sx≡ssk : 2 * suc x ≡ suc (suc k)
   2*sx≡ssk =
     2 * suc x
-      ≡⟨ 2*≡+ (suc x)  ⟩
-    suc x + suc x
-      ≡⟨⟩
-    suc (x + suc x)
-      ≡⟨ cong suc (+-suc x x) ⟩
-    suc (suc (x + x))
-      ≡⟨ cong suc (sym $ cong suc (2*≡+ x)) ⟩
+      ≡⟨ 2*-suc x  ⟩
     suc (suc (2 * x))
       ≡⟨ cong (suc ∘ suc) 2*x≡k ⟩
     suc (suc k)
@@ -157,13 +138,9 @@ even*⇒even⊎even {m} {n} even-m*n
 2*≡ : ∀ k n → 2 * k ≡ n → 2 * (1 + k) ≡ 2 + n
 2*≡ k n =
   2 * k ≡ n
-    ≡⟨ refl ⟩
-  k + (k + zero) ≡ n
     ∼⟨ cong (suc ∘ suc) ⟩
-  suc (suc (k + (k + zero))) ≡ suc (suc n)
-    ∼⟨ subst (λ m → suc m ≡ suc (suc n)) (sym $ +-suc k (k + zero)) ⟩
-  suc (k + suc (k + zero)) ≡ suc (suc n)
-    ≡⟨ refl ⟩
+  2 + 2 * k ≡ 2 + n
+    ∼⟨ subst (λ m → m ≡ 2 + n) (sym $ 2*-suc k) ⟩
   2 * (1 + k) ≡ 2 + n
   ∎
   where open Related.EquationalReasoning hiding (sym)
@@ -171,13 +148,9 @@ even*⇒even⊎even {m} {n} even-m*n
 2*s≡ss : ∀ k n → 2 * (1 + k) ≡ 2 + n → 2 * k ≡ n
 2*s≡ss k n =
   2 * (1 + k) ≡ 2 + n
-    ≡⟨ refl ⟩
-  suc (k + suc (k + 0)) ≡ suc (suc n)
-    ∼⟨ subst (λ m → suc m ≡ suc (suc n)) (+-suc k (k + zero)) ⟩
-  suc (suc (k + (k + 0))) ≡ suc (suc n)
+    ∼⟨ subst (λ m → m ≡ 2 + n) (2*-suc k) ⟩
+  2 + 2 * k ≡ 2 + n
     ∼⟨ cong (pred ∘ pred) ⟩
-  k + (k + 0) ≡ n
-    ≡⟨ refl ⟩
   2 * k ≡ n
   ∎
   where open Related.EquationalReasoning
