@@ -36,7 +36,7 @@ import Corollary
 ----
 
 -- There is no m and n such that
---   n ≢ 0 and m^2 ≡ 2*n^2
+--   n ≢ 0 and m * m ≡ 2 * (n * n)
 -- Hence, sqrt 2 is irrational.
 
 -- The proof in Coq has been originally written by Pierre Corbineau

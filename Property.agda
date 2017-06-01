@@ -47,8 +47,8 @@ isSemigroup : IsSemigroup _≈_ _∙_
 isSemigroup = Semigroup.isSemigroup semigroup
 ----
 
-assoc : Associative _≈_ _∙_
-assoc = IsSemigroup.assoc isSemigroup
+∙-assoc : Associative _≈_ _∙_
+∙-assoc = IsSemigroup.assoc isSemigroup
 
 ∙-cong : _∙_ Preserves₂ _≈_ ⟶ _≈_ ⟶ _≈_
 ∙-cong = IsSemigroup.∙-cong isSemigroup
@@ -84,28 +84,28 @@ isCommutativeMonoid
   = CommutativeMonoid.isCommutativeMonoid commutativeMonoid
 ----
 
-comm : Commutative _≈_ _∙_
-comm = IsCommutativeMonoid.comm isCommutativeMonoid
+∙-comm : Commutative _≈_ _∙_
+∙-comm = IsCommutativeMonoid.comm isCommutativeMonoid
 
-cancel : Cancel _≈_ _∙_
-cancel = IsCancellativeAbelianMonoid.cancel 
+∙-cancel : Cancel _≈_ _∙_
+∙-cancel = IsCancellativeAbelianMonoid.cancel 
          (CancellativeAbelianMonoid.isCancellativeAbelianMonoid m)
 
 square : (x : Carrier) → Carrier
 square x = x ∙ x
 
 multiple : (p : Carrier) → Rel Carrier l
-multiple p = λ (x y : Carrier) → (p ∙ x) ≈ y 
+multiple p x y = (p ∙ x) ≈ y 
 
 _divides_ : Rel Carrier (l ⊔ a)
-x divides y = ∃ (λ z → (x ∙ z) ≈ y)
+x divides y = ∃ λ z → (x ∙ z) ≈ y
 
-_isPrime : Pred Carrier (l ⊔ a)
-p isPrime = (x y : Carrier) → p divides (x ∙ y) →
-            (p divides x) ⊎ (p divides y)
+Prime : Pred Carrier (l ⊔ a)
+Prime p = ∀ x y → p divides (x ∙ y) →
+            p divides x ⊎ p divides y
 
 Square : Rel Carrier (l ⊔ a)
-Square = λ (p x : Carrier) → ∃ (λ y → p ∙ square x ≈ square y)
+Square p x = ∃ λ y → p ∙ (x ∙ x) ≈ y ∙ y
 
-_isNotSquare : Pred Carrier (l ⊔ a)
-p isNotSquare = (x y : Carrier) → ¬ ((p ∙ square x) ≈ square y)
+NotSquare : Pred Carrier (l ⊔ a)
+NotSquare p = ∀ x y → ¬ (p ∙ (x ∙ x) ≈ y ∙ y)

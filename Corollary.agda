@@ -69,7 +69,7 @@ divides⇒∣ (x , p) ((y , q) , h) =
 ∣⇒divides (.(suc (y + suc (y + 0))) , tt) (suc y , refl) =
   (suc y , tt) , ≈⁺⇒≡ refl
 
-lemma1 : 2⁺ isPrime
+lemma1 : Prime 2⁺
 lemma1 (x , p) (y , q) h
   with divides⇒∣ ((x , p) ⊛ (y , q)) h
 ... | 2∣x*y with 2∣*⊎ {x} {y} 2∣x*y
@@ -107,5 +107,5 @@ lemma2′ P f (x , p) (acc rs) with  2∣? x
 lemma2 : Noether Carrier (multiple 2⁺)
 lemma2 P f n = lemma2′ P f n (<-well-founded (fromℕ⁺ n))
 
-corollary : 2⁺ isNotSquare
+corollary : NotSquare 2⁺
 corollary = theorem 2⁺ lemma1 lemma2

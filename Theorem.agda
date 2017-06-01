@@ -14,6 +14,7 @@ http://www.cs.ru.nl/~freek/comparison/comparison.pdf
 -}
 
 open import Data.Product
+open import Data.Empty
 open import Relation.Binary
 open import Relation.Nullary
 open import Relation.Unary
@@ -31,9 +32,8 @@ open R
 -- abelian monoid.
 -- the main theorem
 
-theorem : (p : Carrier) → (p isPrime) → Noether Carrier (multiple p) → 
-          (p isNotSquare)
-theorem p h1 h2
-  = let rem : (z : Carrier) → ¬ Square p z
-        rem = infiniteDescent Carrier (multiple p) (Square p) h2 (lemma9 p h1)
-    in λ x y h3 → rem x (y , h3)
+theorem : ∀ p → Prime p → Noether Carrier (multiple p) → NotSquare p
+theorem p pr-p noe x y pxx≈yy
+  with infiniteDescent Carrier (multiple p) (Square p) noe (jump-down p pr-p)
+... | ¬sq-p
+  = ¬sq-p x (y , pxx≈yy)

@@ -1,9 +1,9 @@
 open import Agda.Primitive
 
-open import CancellativeAbelianMonoid
+import CancellativeAbelianMonoid
 
 module Lemma
-  (a l : Level) (m : CancellativeAbelianMonoid a l)
+  (a l : Level) (cam : CancellativeAbelianMonoid.CancellativeAbelianMonoid a l)
   where
 
 {-
@@ -12,108 +12,53 @@ http://www.cs.ru.nl/~freek/comparison/comparison.pdf
 -}
 
 open import Data.Product
-open import Data.Sum
+open import Data.Sum as Sum
 open import Relation.Binary
-import Relation.Binary.EqReasoning as EqReasoning
+import Relation.Binary.EqReasoning as EqR
 
 open import Function
+  using (_∘_; _$_; id)
+import Function.Related as Related
 
 import Property
-module P = Property a l m
-open P
+open Property a l cam
 
-open EqReasoning (≈-setoid)
+open EqR (≈-setoid)
 
-∃-elim : ∀ {a b c} {A : Set a} {B : A → Set b} 
-             {C : Set c} →
-          ∃ B → ((x : A) → B x → C) → C
-∃-elim (proj₁ , proj₂) f = f proj₁ proj₂
+p∣sq : ∀ p x → Prime p → p divides (x ∙ x) → p divides x
+p∣sq p x pr-p p∣xx = [ id , id ]′ $ pr-p x x p∣xx
 
-∙-congLeft : (x y z : Carrier) → y ≈ z → (y ∙ x) ≈ (z ∙ x)
-∙-congLeft x y z p = ∙-cong p ≈-refl
+step-down : ∀ p x y → Prime p → p ∙ (x ∙ x) ≈ (y ∙ y) →
+          ∃ (λ z → (p ∙ z ≈ y) × (p ∙ (z ∙ z) ≈ (x ∙ x)))
+step-down p x y p-pr pxx≈yy
+  with p∣sq p y p-pr ((x ∙ x) , pxx≈yy)
+... | w , pw≈y = w , pw≈y , ∙-cancel (p ∙ (w ∙ w)) (x ∙ x) p help
+  where
+  help : p ∙ (p ∙ (w ∙ w)) ≈ p ∙ (x ∙ x)
+  help = begin
+    p ∙ (p ∙ (w ∙ w))
+      ≈⟨ ∙-cong ≈-refl
+         (begin
+           p ∙ (w ∙ w)
+             ≈⟨ ≈-sym $ ∙-assoc p w w ⟩
+           (p ∙ w) ∙ w
+             ≈⟨ ∙-comm (p ∙ w) w ⟩
+           w ∙ (p ∙ w)
+         ∎) ⟩
+    p ∙ (w ∙ (p ∙ w))
+      ≈⟨ ≈-sym $ ∙-assoc p w (p ∙ w) ⟩
+    (p ∙ w) ∙ (p ∙ w)
+      ≈⟨ ∙-cong pw≈y pw≈y ⟩
+    y ∙ y
+      ≈⟨ ≈-sym $ pxx≈yy ⟩
+    p ∙ (x ∙ x)
+    ∎
 
-∙-congRight : (x y z : Carrier) → y ≈ z → (x ∙ y) ≈ (x ∙ z)
-∙-congRight x y z p = ∙-cong ≈-refl p
-
--- required by proof of lemma3
-lemma2 : (x y z : Carrier) → (x ∙ (y ∙ z)) ≈ (y ∙ (x ∙ z))
-lemma2 x y z = begin
-  (x ∙ (y ∙ z)) ≈⟨ comm x (y ∙ z) ⟩ 
-  (y ∙ z) ∙ x   ≈⟨ assoc y z x ⟩ 
-  y ∙ (z ∙ x)   
-    ≈⟨ ∙-congRight y (z ∙ x) (x ∙ z) (comm z x)  ⟩ 
-  (y ∙ (x ∙ z))
-  ∎
-
--- required by proof of lemma4
-lemma3 : (x y z : Carrier) → 
-         (x ∙ (x ∙ (square y))) ≈ square (x ∙ y)
-lemma3 x y z = begin
-   (x ∙ (x ∙ (square y))) 
-     ≈⟨ ∙-congRight x (x ∙ (y ∙ y)) (y ∙ (x ∙ y)) (lemma2 x y y) ⟩
-   (x ∙ (y ∙ (x ∙ y))) ≈⟨ ≈-sym $ assoc x y (x ∙ y) ⟩
-   square (x ∙ y)
-   ∎
-
--- required by proof of lemma6
-lemma4 : (x y z : Carrier) → ((x ∙ z) ≈ y) →
-         (x ∙ (x ∙ square z)) ≈ square y
-lemma4 x y z p = begin
-  x ∙ (x ∙ square z) ≈⟨ lemma3 x z z ⟩
-  square (x ∙ z) ≈⟨ ∙-cong p p ⟩
-  square y
-  ∎
-
--- required by proof of lemma6
-lemma5 : (w x y z : Carrier) → ((w ∙ x) ≈ z) →
-         ((w ∙ y) ≈ z) → (x ≈ y)
-lemma5 w x y z p q =
-  cancel x y w (≈-trans p (≈-sym q))
-
--- required by proof of lemma8
-lemma6 : (w x y z : Carrier) → 
-         ((w ∙ (square x)) ≈ square y) → (w ∙ z) ≈ y →
-         (w ∙ (square z)) ≈ square x
-lemma6 w x y z s t 
-  = lemma5 w (w ∙ square z) (square x) (square y) 
-           (lemma4 w y z t) s
-
--- required by proof of lemma8
-lemma7 : (p x : Carrier) → p isPrime →
-         p divides (square x) → p divides x
---lemma7 p x s t = ⊎-elim (λ y → y) (λ y → y) (s x x t)
-lemma7 p x s t = [ id , id ]′ (s x x t)
--- can we prove above without ⊎-elim?
-
--- required by proof of lemma9
-lemma8 : (p x y : Carrier) → p isPrime →
-         (((p ∙ square x)) ≈ square y) →
-         ∃ (λ z → ((p ∙ z) ≈ y) × ((p ∙ square z) ≈ square x))
-lemma8 p x y s t =
-  ∃-elim rem 
-         (λ w u → w , (u , (lemma6 p x y w t u)))
-  where rem : p divides y
-        rem = lemma7 p y s ((square x) , t)
--- can we prove above without ∃-elim?
-
--- needed for the theorem
-lemma9 : (p : Carrier) → (h2 : p isPrime) → (x : Carrier) →
-         (h3 : Square p x) → 
-         ∃ (λ (x1 : Carrier) → ((p ∙ x1 ≈ x) × Square p x1))
-lemma9 p h2 x h3 
-  = ∃-elim h3 (λ y h4 → 
-                ∃-elim (lemma8 p x y h2 h4) 
-                        (λ y1 h5 → 
-                           let 
-                             rem2 : p ∙ square y1 ≈ square x
-                             rem2 = proj₂ h5
-                           in 
-                           ∃-elim (lemma8 p y1 x h2 rem2) 
-                                   (λ x1 h6 → 
-                                      let rem3 : p ∙ x1 ≈ x
-                                          rem3 = proj₁ h6
-                                          rem4 : p ∙ square x1 ≈ square y1
-                                          rem4 = proj₂ h6
-                                      in
-                                      x1 , (rem3 , (y1 , rem4)))))
--- TODO: rewrite above more simple
+jump-down : ∀ p → Prime p → ∀ x → (∃ λ u → p ∙ (x ∙ x) ≈ u ∙ u) → 
+          ∃ λ z → (p ∙ z ≈ x) × (∃ λ w → p ∙ (z ∙ z) ≈ w ∙ w)
+jump-down p pr-p x (u , pxx≈uu)
+  with step-down p x u pr-p pxx≈uu
+... | w , pw≈u , pww≈xx
+  with step-down p w x pr-p pww≈xx
+... | z , pz≈x , pzz≈ww =
+  z , pz≈x , w , pzz≈ww
