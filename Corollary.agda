@@ -17,7 +17,7 @@ open import Relation.Binary.Core
 open import Relation.Binary.PropositionalEquality
 
 open import Data.Nat
-  using (ℕ; zero; suc; _+_; _*_; _<′_; ≤′-refl; ≤′-step)
+  using (ℕ; zero; suc; _+_; _*_; _<′_; ≤′-refl; ≤′-step; _≤′_)
 open import Data.Nat.Properties
   using (s≤′s)
 open import Data.Product
@@ -28,7 +28,7 @@ open import Data.Empty
 open import Data.Unit
 
 open import Induction.WellFounded
-  using (Acc; acc)
+  using (Acc; acc; module Subrelation; module Inverse-image)
 open import Induction.Nat
   using (<-well-founded)
 
@@ -69,8 +69,8 @@ divides⇒∣ (x , p) ((y , q) , h) =
 ∣⇒divides (.(suc (y + suc (y + 0))) , tt) (suc y , refl) =
   (suc y , tt) , ≈⁺⇒≡ refl
 
-lemma1 : Prime 2⁺
-lemma1 (x , p) (y , q) h
+prime-2⁺ : Prime 2⁺
+prime-2⁺ (x , p) (y , q) h
   with divides⇒∣ ((x , p) ⊛ (y , q)) h
 ... | 2∣x*y with 2∣*⊎ {x} {y} 2∣x*y
 ... | inj₁ 2∣x = inj₁ (∣⇒divides (x , p) 2∣x)
@@ -108,4 +108,25 @@ lemma2 : Noether Carrier (multiple 2⁺)
 lemma2 P f n = lemma2′ P f n (<-well-founded (fromℕ⁺ n))
 
 corollary : NotSquare 2⁺
-corollary = theorem 2⁺ lemma1 lemma2
+corollary = theorem 2⁺ prime-2⁺ lemma2
+
+_<′⁺_ : (m n : ℕ⁺) → Set
+m <′⁺ n = fromℕ⁺ m <′ fromℕ⁺ n
+
+2⁺*≡⇒<′⁺ : ∀ {m n} → 2⁺ ⊛ m ≡ n → m <′⁺ n
+2⁺*≡⇒<′⁺ {x , p} {y , q} 2m≡n
+  rewrite sym $ (cong fromℕ⁺ 2m≡n)
+  = <′2* x p
+
+module Wf-<′⁺ = Inverse-image {A = ℕ⁺} {B = ℕ} {_<′_} fromℕ⁺
+module Wf-2⁺*≡ = Subrelation {A = ℕ⁺} {multiple 2⁺} {_<′⁺_} 2⁺*≡⇒<′⁺
+
+lemma2₂ : ∀ (k m : ℕ⁺) → 2⁺ ∙ (k ⊛ k) ≡ (m ⊛ m) →
+             Acc (multiple 2⁺) m → ⊥
+lemma2₂ k m 2kk≡mm acc-m =
+  theorem₂ 2⁺ prime-2⁺ k m 2kk≡mm acc-m
+
+corollary₂ : NotSquare 2⁺
+corollary₂ k m 2kk≡mm =
+  lemma2₂ k m 2kk≡mm
+          (Wf-2⁺*≡.well-founded (Wf-<′⁺.well-founded <-well-founded) m)

@@ -30,25 +30,3 @@ infiniteDescent A _>_ P noe f =
   where helper : ∀ x → (∀ y → y > x → ¬ P y) → ¬ P x
         helper x h px with f x px
         ... | y , y>x , py = h y y>x py
-
--- original proofs
-{-
-∃-elim : ∀ {a b c} → {A : Set a} → {B : A → Set b} → {C : Set c}
-          (f : ∃ B) → (g : (x : A) → B x → C) → C
-∃-elim (proj₁ , proj₂) g = g proj₁ proj₂
-
-×-elimLeft : ∀ {a b} → {A : Set a} → {B : Set b} → A × B → A
-×-elimLeft (proj₁ , proj₂) = proj₁
-
-×-elimRight : ∀ {a b} → {A : Set a} → {B : Set b} → A × B → B
-×-elimRight (proj₁ , proj₂) = proj₂
-
-infiniteDescent A R P h1 h2 x 
-  = h1 (λ y → ¬ P y) 
-       ((λ (z : A) (h3 : (y : A) → R y z → ¬ P y) (h4 : P z) → 
-           ∃-elim (h2 z h4) 
-                   (λ (y : A) (h5 : R y z × P y) → 
-                      h3 y (×-elimLeft h5) (×-elimRight h5))))
-       x
--}
-

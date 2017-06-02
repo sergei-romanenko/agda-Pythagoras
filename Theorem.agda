@@ -19,6 +19,8 @@ open import Relation.Binary
 open import Relation.Nullary
 open import Relation.Unary
 
+open import Function
+
 import Lemma
 module Q = Lemma a a m
 open Q
@@ -33,7 +35,19 @@ open R
 -- the main theorem
 
 theorem : ∀ p → Prime p → Noether Carrier (multiple p) → NotSquare p
-theorem p pr-p noe x y pxx≈yy
-  with infiniteDescent Carrier (multiple p) (Square p) noe (jump-down p pr-p)
+theorem p prime-p noe x y pxx≈yy
+  with infiniteDescent Carrier (multiple p) (Square p) noe (jump-down p prime-p)
 ... | ¬sq-p
   = ¬sq-p x (y , pxx≈yy)
+
+open import Induction.WellFounded
+  using (Acc; acc)
+
+theorem₂ : ∀ p → Prime p → ∀ x u → p ∙ (x ∙ x) ≈ (u ∙ u) →
+             Acc (multiple p) u → ⊥
+theorem₂ p prime-p x u pxx≈uu (acc rs)
+  with step-down p prime-p x u pxx≈uu
+... | y , py≈u , pyy≈xx
+  with step-down p prime-p y x pyy≈xx
+... | w , pw≈x , pww≈yy
+  = theorem₂ p prime-p w y pww≈yy (rs y py≈u)

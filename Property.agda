@@ -91,9 +91,6 @@ isCommutativeMonoid
 ∙-cancel = IsCancellativeAbelianMonoid.cancel 
          (CancellativeAbelianMonoid.isCancellativeAbelianMonoid m)
 
-square : (x : Carrier) → Carrier
-square x = x ∙ x
-
 multiple : (p : Carrier) → Rel Carrier l
 multiple p x y = (p ∙ x) ≈ y 
 

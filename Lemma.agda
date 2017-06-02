@@ -28,10 +28,10 @@ open EqR (≈-setoid)
 p∣sq : ∀ p x → Prime p → p divides (x ∙ x) → p divides x
 p∣sq p x pr-p p∣xx = [ id , id ]′ $ pr-p x x p∣xx
 
-step-down : ∀ p x y → Prime p → p ∙ (x ∙ x) ≈ (y ∙ y) →
+step-down : ∀ p → Prime p → ∀ x y →  p ∙ (x ∙ x) ≈ (y ∙ y) →
           ∃ (λ z → (p ∙ z ≈ y) × (p ∙ (z ∙ z) ≈ (x ∙ x)))
-step-down p x y p-pr pxx≈yy
-  with p∣sq p y p-pr ((x ∙ x) , pxx≈yy)
+step-down p p-prime x y pxx≈yy
+  with p∣sq p y p-prime ((x ∙ x) , pxx≈yy)
 ... | w , pw≈y = w , pw≈y , ∙-cancel (p ∙ (w ∙ w)) (x ∙ x) p help
   where
   help : p ∙ (p ∙ (w ∙ w)) ≈ p ∙ (x ∙ x)
@@ -55,10 +55,10 @@ step-down p x y p-pr pxx≈yy
     ∎
 
 jump-down : ∀ p → Prime p → ∀ x → (∃ λ u → p ∙ (x ∙ x) ≈ u ∙ u) → 
-          ∃ λ z → (p ∙ z ≈ x) × (∃ λ w → p ∙ (z ∙ z) ≈ w ∙ w)
-jump-down p pr-p x (u , pxx≈uu)
-  with step-down p x u pr-p pxx≈uu
+          ∃ λ y → (p ∙ y ≈ x) × (∃ λ w → p ∙ (y ∙ y) ≈ w ∙ w)
+jump-down p prime-p x (u , pxx≈uu)
+  with step-down p prime-p x u pxx≈uu
 ... | w , pw≈u , pww≈xx
-  with step-down p w x pr-p pww≈xx
-... | z , pz≈x , pzz≈ww =
-  z , pz≈x , w , pzz≈ww
+  with step-down p prime-p w x pww≈xx
+... | y , py≈x , pyy≈ww =
+  y , py≈x , w , pyy≈ww
