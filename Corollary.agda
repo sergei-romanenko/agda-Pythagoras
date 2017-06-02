@@ -28,7 +28,7 @@ open import Data.Empty
 open import Data.Unit
 
 open import Induction.WellFounded
-  using (Acc; acc; module Subrelation; module Inverse-image)
+  using (Acc; acc; Well-founded; module Subrelation; module Inverse-image)
 open import Induction.Nat
   using (<-well-founded)
 
@@ -56,7 +56,6 @@ m = record {
     ; isCancellativeAbelianMonoid = isCancellativeAbelianMonoid
     }
 
-open import Noether
 open import Property lzero lzero m
 open import Theorem lzero m
 
@@ -93,23 +92,6 @@ prime-2⁺ (x , p) (y , q) h
     2 + x <′ 2 * (2 + x)
     ∎
 
-lemma2′ : (P : ℕ⁺ → Set) →
-  ((m : ℕ⁺) → ((k : ℕ⁺) → 2⁺ ⊛ k ≡ m → P k) → P m) →
-  (n : ℕ⁺) (a : Acc _<′_ (fromℕ⁺ n)) → P n
-lemma2′ P f (x , p) (acc rs) with  2∣? x
-... | no ¬∃k→2*k≡x = f (x , p) help
-  where help : (k : ℕ⁺) → 2⁺ ⊛ k ≡ (x , p) → P k
-        help (z , r) 2⊛k≡n = ⊥-elim (¬∃k→2*k≡x (z , cong fromℕ⁺ 2⊛k≡n))
-... | yes (k , 2*k≡x) =
-  f (x , p) (λ {(l , s) ≡n → lemma2′ P f (l , s)
-    (rs l (subst (_<′_ l) (cong fromℕ⁺ ≡n) (<′2* l s)))})
-
-lemma2 : Noether Carrier (multiple 2⁺)
-lemma2 P f n = lemma2′ P f n (<-well-founded (fromℕ⁺ n))
-
-corollary : NotSquare 2⁺
-corollary = theorem 2⁺ prime-2⁺ lemma2
-
 _<′⁺_ : (m n : ℕ⁺) → Set
 m <′⁺ n = fromℕ⁺ m <′ fromℕ⁺ n
 
@@ -121,12 +103,14 @@ m <′⁺ n = fromℕ⁺ m <′ fromℕ⁺ n
 module Wf-<′⁺ = Inverse-image {A = ℕ⁺} {B = ℕ} {_<′_} fromℕ⁺
 module Wf-2⁺*≡ = Subrelation {A = ℕ⁺} {multiple 2⁺} {_<′⁺_} 2⁺*≡⇒<′⁺
 
-lemma2₂ : ∀ (k m : ℕ⁺) → 2⁺ ∙ (k ⊛ k) ≡ (m ⊛ m) →
-             Acc (multiple 2⁺) m → ⊥
-lemma2₂ k m 2kk≡mm acc-m =
-  theorem₂ 2⁺ prime-2⁺ k m 2kk≡mm acc-m
+2⁺⊛-well-founded : Well-founded (multiple 2⁺)
+2⁺⊛-well-founded = Wf-2⁺*≡.well-founded ∘ Wf-<′⁺.well-founded $ <-well-founded
 
-corollary₂ : NotSquare 2⁺
-corollary₂ k m 2kk≡mm =
-  lemma2₂ k m 2kk≡mm
-          (Wf-2⁺*≡.well-founded (Wf-<′⁺.well-founded <-well-founded) m)
+corollary′ : ∀ (k m : ℕ⁺) → 2⁺ ∙ (k ⊛ k) ≡ (m ⊛ m) →
+             Acc (multiple 2⁺) m → ⊥
+corollary′ k m 2kk≡mm acc-m =
+  theorem 2⁺ prime-2⁺ k m 2kk≡mm acc-m
+
+corollary : NotSquare 2⁺
+corollary k m 2kk≡mm =
+  corollary′ k m 2kk≡mm (2⁺⊛-well-founded m)

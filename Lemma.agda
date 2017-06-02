@@ -53,12 +53,3 @@ step-down p p-prime x y pxx≈yy
       ≈⟨ ≈-sym $ pxx≈yy ⟩
     p ∙ (x ∙ x)
     ∎
-
-jump-down : ∀ p → Prime p → ∀ x → (∃ λ u → p ∙ (x ∙ x) ≈ u ∙ u) → 
-          ∃ λ y → (p ∙ y ≈ x) × (∃ λ w → p ∙ (y ∙ y) ≈ w ∙ w)
-jump-down p prime-p x (u , pxx≈uu)
-  with step-down p prime-p x u pxx≈uu
-... | w , pw≈u , pww≈xx
-  with step-down p prime-p w x pww≈xx
-... | y , py≈x , pyy≈ww =
-  y , py≈x , w , pyy≈ww

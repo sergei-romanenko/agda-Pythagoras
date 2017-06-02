@@ -101,8 +101,5 @@ Prime : Pred Carrier (l ⊔ a)
 Prime p = ∀ x y → p divides (x ∙ y) →
             p divides x ⊎ p divides y
 
-Square : Rel Carrier (l ⊔ a)
-Square p x = ∃ λ y → p ∙ (x ∙ x) ≈ y ∙ y
-
 NotSquare : Pred Carrier (l ⊔ a)
 NotSquare p = ∀ x y → ¬ (p ∙ (x ∙ x) ≈ y ∙ y)

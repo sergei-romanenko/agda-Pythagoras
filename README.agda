@@ -1,8 +1,5 @@
 module README where
 
--- The definitions of Noetherian and Fermat's infinite descent principle.
-import Noether
-
 -- The definition of cancel.
 import Cancel
 

@@ -16,7 +16,7 @@ open import Data.Unit
 import Level
 
 open import Relation.Binary
-open import Relation.Binary.PropositionalEquality as P
+open import Relation.Binary.PropositionalEquality
 
 open import Function
   using (_∘_; _$_; id; flip)

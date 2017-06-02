@@ -22,9 +22,6 @@ This version tries to exploit the the Agda standard library.
 
 ## Files:
 
-* `Noether.agda`  
-  The definitions of Noetherian and Fermat's infinite descent principle.
-
 * `Cancel.agda`  
   The definition of cancel.
 
