@@ -1,4 +1,4 @@
-module CancellativeAbelianMonoid where
+module Cancellative where
 
 {-
 The original proof is written by Thierry Coquand.

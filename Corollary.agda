@@ -37,7 +37,7 @@ open import 2Divides
 
 import Cancel
 open Cancel {_} {_} {ℕ⁺} (_≡_)
-open import CancellativeAbelianMonoid
+open import Cancellative
 
 isCancellativeAbelianMonoid : 
   IsCancellativeAbelianMonoid _≡_ _⊛_ 1⁺

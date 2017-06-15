@@ -25,7 +25,7 @@ This version tries to exploit the the Agda standard library.
 * `Cancel.agda`  
   The definition of cancel.
 
-* `CancellativeAbelianMonoid.agda`  
+* `Cancellative.agda`  
   The definition of cancellative abelian monoid.
 
 * `Property.agda`  

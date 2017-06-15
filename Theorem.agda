@@ -1,6 +1,6 @@
 open import Agda.Primitive
 
-open import CancellativeAbelianMonoid
+open import Cancellative
 
 module Theorem (a : Level) (m : CancellativeAbelianMonoid a a)
   where

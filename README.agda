@@ -4,7 +4,7 @@ module README where
 import Cancel
 
 -- The definition of cancellative abelian monoid.
-import CancellativeAbelianMonoid
+import Cancellative
 
 -- Helper functions of a cancellative abelian monoid.
 import Property

@@ -1,9 +1,9 @@
 open import Agda.Primitive
 
-import CancellativeAbelianMonoid
+import Cancellative
 
 module Lemma
-  (a l : Level) (cam : CancellativeAbelianMonoid.CancellativeAbelianMonoid a l)
+  (a l : Level) (cam : Cancellative.CancellativeAbelianMonoid a l)
   where
 
 {-

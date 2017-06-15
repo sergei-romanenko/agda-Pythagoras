@@ -1,5 +1,5 @@
 open import Agda.Primitive
-open import CancellativeAbelianMonoid
+open import Cancellative
 
 module Property
   (a l : Level) 
