@@ -12,24 +12,25 @@ The original proof is written by Thierry Coquand.
 http://www.cs.ru.nl/~freek/comparison/comparison.pdf
 -}
 
-open import Algebra
-open import Algebra.Structures
-
 open import Data.Product
+  using (_×_; _,_; ∃)
 open import Data.Sum as Sum
+  using (_⊎_; [_,_]′)
 open import Data.Empty
+  using (⊥)
 open import Relation.Binary
-open import Relation.Binary.PropositionalEquality as PropEq
-  using (_≡_)
+  using (Rel)
 open import Relation.Nullary
+  using (¬_)
 open import Relation.Unary
+  using (Pred)
 
 open import Function
   using (_∘_; _$_; id)
 
 open import Induction.WellFounded
   using (Acc; acc)
-import Relation.Binary.EqReasoning as EqR
+
 
 open CancellativeAbelianMonoid {a} {a} m public
   renaming ( setoid to ≈-setoid
@@ -42,7 +43,8 @@ open CancellativeAbelianMonoid {a} {a} m public
            ; cancel to ∙-cancel
            )
 
-open EqR (≈-setoid)
+open import Relation.Binary.EqReasoning (≈-setoid)
+
 
 multiple : (p : Carrier) → Rel Carrier a
 multiple p x y = (p ∙ x) ≈ y
@@ -58,8 +60,10 @@ Prime p = ∀ x y → p divides (x ∙ y) →
 NotSquare : Pred Carrier a
 NotSquare p = ∀ x y → ¬ (p ∙ (x ∙ x) ≈ y ∙ y)
 
+
 p∣sq : ∀ p x → Prime p → p divides (x ∙ x) → p divides x
 p∣sq p x pr-p p∣xx = [ id , id ]′ $ pr-p x x p∣xx
+
 
 step-down : ∀ p → Prime p → ∀ x y →  p ∙ (x ∙ x) ≈ (y ∙ y) →
           ∃ (λ z → (p ∙ z ≈ y) × (p ∙ (z ∙ z) ≈ (x ∙ x)))

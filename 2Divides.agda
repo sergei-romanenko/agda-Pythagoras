@@ -5,10 +5,12 @@ open import Data.Nat
 open import Data.Nat.Properties.Simple
   using (+-suc; +-assoc; +-right-identity)
 open import Data.Product as Prod
+  using (_×_; _,_; ∃)
 open import Data.Sum as Sum
+  using (_⊎_; inj₁; inj₂; [_,_]′)
 open import Data.Empty
+  using (⊥)
 
-open import Relation.Nullary
 open import Relation.Binary.PropositionalEquality as P
   using (_≡_; _≢_; refl; cong; cong₂; subst; sym; module ≡-Reasoning)
 

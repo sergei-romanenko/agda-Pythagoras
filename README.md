@@ -7,7 +7,7 @@
 
 This version tries to exploit the the Agda standard library.
 
-## Links:
+## Links
 
 * Agda  
   <http://wiki.portal.chalmers.se/agda/pmwiki.php>
@@ -20,7 +20,7 @@ This version tries to exploit the the Agda standard library.
 * Other proofs by another different proof assistants  
   <http://www.cs.ru.nl/~freek/comparison/>
 
-## Files:
+## Files
 
 * `Cancellative.agda`  
   The definition of cancellative abelian monoid.
@@ -47,7 +47,7 @@ This version tries to exploit the the Agda standard library.
 
 ---
 
-## Miscellanea:
+## Miscellanea
 
 * `Corbineau.Sqrt2`
 

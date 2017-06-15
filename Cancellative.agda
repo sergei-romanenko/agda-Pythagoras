@@ -5,14 +5,16 @@ The original proof is written by Thierry Coquand.
 http://www.cs.ru.nl/~freek/comparison/comparison.pdf
 -}
 
-
-open import Level
-open import Algebra
-import Algebra.FunctionProperties as FunctionProperties
-open import Algebra.Structures
-open FunctionProperties
 open import Agda.Primitive
+open import Algebra
+  using (CommutativeMonoid)
+open import Algebra.Structures
+  using (IsCommutativeMonoid)
+open import Algebra.FunctionProperties.Core
+  using (Op₂)
+import Algebra.FunctionProperties
 open import Relation.Binary
+  using (Rel)
 
 module _ {a l} {A : Set a} (_≈_ : Rel A l) (_∙_ : Op₂ A) where
 
@@ -24,7 +26,7 @@ record IsCancellativeAbelianMonoid
   (ε : A) : Set (a ⊔ l)
   where
 
-  open FunctionProperties ≈
+  open Algebra.FunctionProperties ≈
   field
     isCommutativeMonoid : IsCommutativeMonoid ≈ _∙_ ε
     cancel : Cancel ≈ _∙_

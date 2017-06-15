@@ -2,19 +2,8 @@ module Corollary where
 
 open import Agda.Primitive
 
-open import Algebra
-open import Function
-  using (_∘_; _$_)
-import Function.Related as Related
-
-import Algebra.FunctionProperties as FunctionProperties
-open FunctionProperties
-open import Algebra.Structures
-open import Agda.Primitive
-open import Relation.Nullary
-open import Relation.Unary
-open import Relation.Binary.Core
 open import Relation.Binary.PropositionalEquality
+  using (_≡_; refl; sym; cong)
 
 open import Data.Nat
   using (ℕ; zero; suc; _+_; _*_; _<′_; ≤′-refl; ≤′-step; _≤′_)
@@ -25,7 +14,11 @@ open import Data.Product
 open import Data.Sum
   using (_⊎_; inj₁; inj₂)
 open import Data.Empty
-open import Data.Unit
+  using (⊥)
+
+open import Function
+  using (_∘_; _$_)
+import Function.Related as Related
 
 open import Induction.WellFounded
   using (Acc; acc; Well-founded; module Subrelation; module Inverse-image)
@@ -44,8 +37,8 @@ isCancellativeAbelianMonoid = record
   ; cancel = cancel-⊛-left
   }
 
-m : CancellativeAbelianMonoid lzero lzero
-m = record
+mnd : CancellativeAbelianMonoid lzero lzero
+mnd = record
   { Carrier = ℕ⁺
   ; _≈_ = _≡_
   ; _∙_ = _⊛_
@@ -53,7 +46,8 @@ m = record
   ; isCancellativeAbelianMonoid = isCancellativeAbelianMonoid
   }
 
-open import Theorem lzero m
+open import Theorem lzero mnd
+
 
 divides⇒∣ : (n : ℕ⁺) → 2⁺ divides n → 2∣ fromℕ⁺ n
 divides⇒∣ (x , p) ((y , q) , h) =
@@ -70,6 +64,7 @@ prime-2⁺ (x , p) (y , q) h
 ... | 2∣x*y with 2∣*⊎ {x} {y} 2∣x*y
 ... | inj₁ 2∣x = inj₁ (∣⇒divides (x , p) 2∣x)
 ... | inj₂ 2∣y = inj₂ (∣⇒divides (y , q) 2∣y)
+
 
 <′2* : ∀ x → Pos x → x <′ 2 * x
 <′2* zero ()
@@ -96,11 +91,13 @@ m <′⁺ n = fromℕ⁺ m <′ fromℕ⁺ n
   rewrite sym $ (cong fromℕ⁺ 2m≡n)
   = <′2* x p
 
+
 module Wf-<′⁺ = Inverse-image {A = ℕ⁺} {B = ℕ} {_<′_} fromℕ⁺
 module Wf-2⁺*≡ = Subrelation {A = ℕ⁺} {multiple 2⁺} {_<′⁺_} 2⁺*≡⇒<′⁺
 
 2⁺⊛-well-founded : Well-founded (multiple 2⁺)
 2⁺⊛-well-founded = Wf-2⁺*≡.well-founded ∘ Wf-<′⁺.well-founded $ <-well-founded
+
 
 corollary′ : ∀ (k m : ℕ⁺) → 2⁺ ∙ (k ⊛ k) ≡ (m ⊛ m) →
              Acc (multiple 2⁺) m → ⊥

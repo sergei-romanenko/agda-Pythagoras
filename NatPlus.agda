@@ -1,7 +1,9 @@
 module NatPlus where
 
 open import Algebra.FunctionProperties
+  using (Associative)
 open import Algebra.Structures
+  using (IsCommutativeMonoid)
 
 open import Data.Nat as ℕ
   using (ℕ; zero; suc; pred; _+_; _*_; _<_; _≤_; z≤n; s≤s)
@@ -9,18 +11,18 @@ open import Data.Nat.Properties.Simple
   using (+-assoc; *-comm; +-right-identity; *-assoc)
 open import Data.Nat.Properties
   using (≤-steps)
-open import Data.Product as Prod
 open import Data.Empty
+  using (⊥)
 open import Data.Unit
+  using (⊤; tt)
 
-import Level
-
-open import Relation.Binary
 open import Relation.Binary.PropositionalEquality
+  using (_≡_; refl; cong; cong₂; isEquivalence)
 
 open import Function
   using (_∘_; _$_; id; flip)
 import Function.Related as Related
+
 
 Pos : ℕ → Set
 Pos zero = ⊥
@@ -92,7 +94,7 @@ _⊛_ : (m n : ℕ⁺) → ℕ⁺
   ≈⁺⇒≡ $ *-comm x y
 
 
-⊛-isCommutativeMonoid : IsCommutativeMonoid {Level.zero} _≡_ _⊛_ 1⁺
+⊛-isCommutativeMonoid : IsCommutativeMonoid _≡_ _⊛_ 1⁺
 ⊛-isCommutativeMonoid = record 
   { isSemigroup = record
     { isEquivalence = isEquivalence
