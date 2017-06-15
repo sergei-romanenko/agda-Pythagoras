@@ -1,16 +1,7 @@
 module README where
 
--- The definition of cancel.
-import Cancel
-
 -- The definition of cancellative abelian monoid.
 import Cancellative
-
--- Helper functions of a cancellative abelian monoid.
-import Property
-
--- A lemma for the proof of the main theorem in `Theorem.agda`.
-import Lemma
 
 -- The main theorem which is originally proved by Thierry Coquand:
 -- any prime cannot be a square of rational in cancellative

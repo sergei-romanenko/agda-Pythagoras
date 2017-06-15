@@ -5,6 +5,8 @@ The original proof is written by Thierry Coquand.
 http://www.cs.ru.nl/~freek/comparison/comparison.pdf
 -}
 
+
+open import Level
 open import Algebra
 import Algebra.FunctionProperties as FunctionProperties
 open import Algebra.Structures
@@ -12,7 +14,10 @@ open FunctionProperties
 open import Agda.Primitive
 open import Relation.Binary
 
-import Cancel
+module _ {a l} {A : Set a} (_≈_ : Rel A l) (_∙_ : Op₂ A) where
+
+  Cancel : Set (l ⊔ a)
+  Cancel = ∀ x y z → (z ∙ x) ≈ (z ∙ y) → x ≈ y
 
 record IsCancellativeAbelianMonoid 
   {a l} {A : Set a} (≈ : Rel A l) (_∙_ : Op₂ A)
@@ -20,10 +25,9 @@ record IsCancellativeAbelianMonoid
   where
 
   open FunctionProperties ≈
-  open Cancel ≈
   field
     isCommutativeMonoid : IsCommutativeMonoid ≈ _∙_ ε
-    cancel : Cancel _∙_
+    cancel : Cancel ≈ _∙_
 
   open IsCommutativeMonoid isCommutativeMonoid public
 

@@ -35,28 +35,24 @@ open import Induction.Nat
 open import NatPlus
 open import 2Divides
 
-import Cancel
-open Cancel {_} {_} {ℕ⁺} (_≡_)
 open import Cancellative
 
 isCancellativeAbelianMonoid : 
   IsCancellativeAbelianMonoid _≡_ _⊛_ 1⁺
-isCancellativeAbelianMonoid
-  = record {
-      isCommutativeMonoid = ⊛-isCommutativeMonoid
-    ; cancel = cancel-⊛-left
-    }
+isCancellativeAbelianMonoid = record
+  { isCommutativeMonoid = ⊛-isCommutativeMonoid
+  ; cancel = cancel-⊛-left
+  }
 
 m : CancellativeAbelianMonoid lzero lzero
-m = record {
-      Carrier = ℕ⁺
-    ; _≈_ = _≡_
-    ; _∙_ = _⊛_
-    ; ε   = 1⁺
-    ; isCancellativeAbelianMonoid = isCancellativeAbelianMonoid
-    }
+m = record
+  { Carrier = ℕ⁺
+  ; _≈_ = _≡_
+  ; _∙_ = _⊛_
+  ; ε   = 1⁺
+  ; isCancellativeAbelianMonoid = isCancellativeAbelianMonoid
+  }
 
-open import Property lzero lzero m
 open import Theorem lzero m
 
 divides⇒∣ : (n : ℕ⁺) → 2⁺ divides n → 2∣ fromℕ⁺ n

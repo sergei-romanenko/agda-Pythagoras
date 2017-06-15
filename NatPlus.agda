@@ -95,10 +95,10 @@ _⊛_ : (m n : ℕ⁺) → ℕ⁺
 ⊛-isCommutativeMonoid : IsCommutativeMonoid {Level.zero} _≡_ _⊛_ 1⁺
 ⊛-isCommutativeMonoid = record 
   { isSemigroup = record
-      { isEquivalence = isEquivalence
-      ; assoc         = ⊛-assoc
-      ; ∙-cong        = cong₂ _⊛_
-      }
+    { isEquivalence = isEquivalence
+    ; assoc         = ⊛-assoc
+    ; ∙-cong        = cong₂ _⊛_
+    }
   ; identityˡ = ⊛-leftIdentity
   ; comm      = ⊛-comm
   }

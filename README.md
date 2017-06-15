@@ -22,17 +22,8 @@ This version tries to exploit the the Agda standard library.
 
 ## Files:
 
-* `Cancel.agda`  
-  The definition of cancel.
-
 * `Cancellative.agda`  
   The definition of cancellative abelian monoid.
-
-* `Property.agda`  
-  Helper functions of a cancellative abelian monoid.
-
-* `Lemma.agda`  
-  A lemma for the proof of the main theorem in `Theorem.agda`.
 
 * `Theorem.agda`  
   The main theorem which is originally proved by Thierry Coquand:
