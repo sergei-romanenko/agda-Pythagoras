@@ -13,7 +13,7 @@ http://www.cs.ru.nl/~freek/comparison/comparison.pdf
 -}
 
 open import Data.Product
-  using (_×_; _,_; ∃)
+  using (_×_; _,_; Σ; ∃)
 open import Data.Sum as Sum
   using (_⊎_; [_,_]′)
 open import Data.Empty
@@ -29,7 +29,7 @@ open import Function
   using (_∘_; _$_; id)
 
 open import Induction.WellFounded
-  using (Acc; acc)
+  using (Acc; acc; Well-founded)
 
 
 open CancellativeAbelianMonoid {a} {a} m public
@@ -96,11 +96,15 @@ step-down p p-prime x y pxx≈yy
 -- any prime cannot be a square of rational in cancellative
 -- abelian monoid.
 
-theorem : ∀ p → Prime p → ∀ x u → p ∙ (x ∙ x) ≈ (u ∙ u) →
+theorem′ : ∀ p → Prime p → ∀ x u → p ∙ (x ∙ x) ≈ (u ∙ u) →
              Acc (multiple p) u → ⊥
-theorem p prime-p x u pxx≈uu (acc rs)
+theorem′ p prime-p x u pxx≈uu (acc rs)
   with step-down p prime-p x u pxx≈uu
 ... | y , py≈u , pyy≈xx
   with step-down p prime-p y x pyy≈xx
 ... | w , pw≈x , pww≈yy
-  = theorem p prime-p w y pww≈yy (rs y py≈u)
+  = theorem′ p prime-p w y pww≈yy (rs y py≈u)
+
+theorem : ∀ p → Prime p → Well-founded (multiple p) → NotSquare p
+theorem p prime-p wfmp x u pxx≈uu =
+  theorem′ p prime-p x u pxx≈uu (wfmp u)

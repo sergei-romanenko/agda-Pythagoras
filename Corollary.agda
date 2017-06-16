@@ -49,6 +49,8 @@ mnd = record
 open import Theorem lzero mnd
 
 
+--Prime 2⁺
+
 divides⇒∣ : (n : ℕ⁺) → 2⁺ divides n → 2∣ fromℕ⁺ n
 divides⇒∣ (x , p) ((y , q) , h) =
   y , cong fromℕ⁺ h
@@ -65,6 +67,8 @@ prime-2⁺ (x , p) (y , q) h
 ... | inj₁ 2∣x = inj₁ (∣⇒divides (x , p) 2∣x)
 ... | inj₂ 2∣y = inj₂ (∣⇒divides (y , q) 2∣y)
 
+
+-- Well-founded (multiple 2⁺)
 
 <′2* : ∀ x → Pos x → x <′ 2 * x
 <′2* zero ()
@@ -96,14 +100,13 @@ module Wf-<′⁺ = Inverse-image {A = ℕ⁺} {B = ℕ} {_<′_} fromℕ⁺
 module Wf-2⁺*≡ = Subrelation {A = ℕ⁺} {multiple 2⁺} {_<′⁺_} 2⁺*≡⇒<′⁺
 
 2⁺⊛-well-founded : Well-founded (multiple 2⁺)
-2⁺⊛-well-founded = Wf-2⁺*≡.well-founded ∘ Wf-<′⁺.well-founded $ <-well-founded
+2⁺⊛-well-founded =
+  Wf-2⁺*≡.well-founded $ Wf-<′⁺.well-founded $ <-well-founded
 
-
-corollary′ : ∀ (k m : ℕ⁺) → 2⁺ ∙ (k ⊛ k) ≡ (m ⊛ m) →
-             Acc (multiple 2⁺) m → ⊥
-corollary′ k m 2kk≡mm acc-m =
-  theorem 2⁺ prime-2⁺ k m 2kk≡mm acc-m
+--
+-- 2⁺ is not rational.
+--
 
 corollary : NotSquare 2⁺
-corollary k m 2kk≡mm =
-  corollary′ k m 2kk≡mm (2⁺⊛-well-founded m)
+corollary =
+  theorem 2⁺ prime-2⁺ 2⁺⊛-well-founded
