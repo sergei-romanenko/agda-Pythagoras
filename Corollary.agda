@@ -23,7 +23,7 @@ import Function.Related as Related
 open import Induction.WellFounded
   using (Acc; acc; Well-founded; module Subrelation; module Inverse-image)
 open import Induction.Nat
-  using (<-well-founded)
+  using (<′-well-founded)
 
 open import NatPlus
 open import 2Divides
@@ -101,7 +101,7 @@ module Wf-2⁺*≡ = Subrelation {A = ℕ⁺} {multiple 2⁺} {_<′⁺_} 2⁺*�
 
 2⁺⊛-well-founded : Well-founded (multiple 2⁺)
 2⁺⊛-well-founded =
-  Wf-2⁺*≡.well-founded $ Wf-<′⁺.well-founded $ <-well-founded
+  Wf-2⁺*≡.well-founded $ Wf-<′⁺.well-founded $ <′-well-founded
 
 --
 -- 2⁺ is not rational.

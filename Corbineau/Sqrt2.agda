@@ -33,7 +33,7 @@ open import Relation.Binary.PropositionalEquality as P
 open import Induction.WellFounded
   using (Acc; acc)
 open import Induction.Nat
-  using (<-well-founded)
+  using (<′-well-founded)
 
 infixr 8 2*_
 infixl 9 _^2
@@ -297,4 +297,4 @@ irrational-sqrt2 : ∀ m n → n ≢ 0 → ¬ (m ^2 ≡ 2* (n ^2))
 irrational-sqrt2 m n n≢0 m^2≡2*n^2 =
   n≢0 n≡0
   where n≡0 : n ≡ 0
-        n≡0 = descent m n m^2≡2*n^2 (<-well-founded m)
+        n≡0 = descent m n m^2≡2*n^2 (<′-well-founded m)
