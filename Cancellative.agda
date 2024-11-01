@@ -7,12 +7,8 @@ http://www.cs.ru.nl/~freek/comparison/comparison.pdf
 
 open import Agda.Primitive
 open import Algebra
-  using (CommutativeMonoid)
-open import Algebra.Structures
-  using (IsCommutativeMonoid)
-open import Algebra.FunctionProperties.Core
-  using (Op₂)
-import Algebra.FunctionProperties
+  using (CommutativeMonoid; IsCommutativeMonoid; Op₂)
+import Algebra.Definitions
 open import Relation.Binary
   using (Rel)
 
@@ -26,7 +22,7 @@ record IsCancellativeAbelianMonoid
   (ε : A) : Set (a ⊔ l)
   where
 
-  open Algebra.FunctionProperties ≈
+  open Algebra.Definitions ≈
   field
     isCommutativeMonoid : IsCommutativeMonoid ≈ _∙_ ε
     cancel : Cancel ≈ _∙_
@@ -50,4 +46,4 @@ record CancellativeAbelianMonoid c l : Set (lsuc (c ⊔ l)) where
     = record { isCommutativeMonoid = isCommutativeMonoid }
 
   open CommutativeMonoid commutativeMonoid public 
-    using (setoid; semigroup; rawMonoid; monoid)
+    using (semigroup; rawMonoid; monoid)

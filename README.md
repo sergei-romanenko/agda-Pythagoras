@@ -70,3 +70,8 @@ This version tries to exploit the the Agda standard library.
   <https://lists.chalmers.se/pipermail/agda/2011/003464.html>
 
 ---
+
+## Versions
+
+- Agda 2.6.2.
+- stdlib 1.7.

@@ -1,28 +1,29 @@
 module NatPlus where
 
-open import Algebra.FunctionProperties
-  using (Associative)
-open import Algebra.Structures
-  using (IsCommutativeMonoid)
+open import Algebra
+  using (Identity; Associative; Magma; IsMagma; IsMonoid; IsCommutativeMonoid)
+open import Algebra.Structures.Biased
 
 open import Data.Nat as ℕ
   using (ℕ; zero; suc; pred; _+_; _*_; _<_; _≤_; z≤n; s≤s)
-open import Data.Nat.Properties.Simple
-  using (+-assoc; *-comm; +-right-identity; *-assoc)
 open import Data.Nat.Properties
-  using (≤-steps)
+  using (+-assoc; *-comm; +-identityʳ; +-identityˡ; *-identityʳ; *-identityˡ; *-assoc)
+open import Data.Nat.Properties
+  using (≤-stepsˡ)
 open import Data.Empty
   using (⊥)
 open import Data.Unit
   using (⊤; tt)
+open import Data.Product using (_,_; proj₁; proj₂)
 
+open import Relation.Binary.Structures
+  using (IsEquivalence)
 open import Relation.Binary.PropositionalEquality
   using (_≡_; refl; cong; cong₂; isEquivalence)
 
 open import Function
-  using (_∘_; _$_; id; flip)
+  using(_$_)
 import Function.Related as Related
-
 
 Pos : ℕ → Set
 Pos zero = ⊥
@@ -87,22 +88,38 @@ _⊛_ : (m n : ℕ⁺) → ℕ⁺
 
 ⊛-leftIdentity : ∀ n → 1⁺ ⊛ n ≡ n
 ⊛-leftIdentity (x , p) =
-  ≈⁺⇒≡ $ +-right-identity x
+  ≈⁺⇒≡ $ +-identityʳ x
+
+⊛-rightIdentity : ∀ n → n ⊛ 1⁺ ≡ n
+⊛-rightIdentity (x , p) =
+  ≈⁺⇒≡ $ *-identityʳ x
+
+⊛-identity : Identity _≡_ 1⁺ _⊛_
+⊛-identity = (⊛-leftIdentity , ⊛-rightIdentity)
 
 ⊛-comm : ∀ m n → m ⊛ n ≡  n ⊛ m
 ⊛-comm (x , p) (y , q) =
   ≈⁺⇒≡ $ *-comm x y
 
+⊛-isMagma : IsMagma _≡_  _⊛_
+⊛-isMagma = record
+  { isEquivalence = isEquivalence
+  ; ∙-cong        = cong₂ _⊛_
+  }
+
+⊛-isMonoid : IsMonoid _≡_ _⊛_ 1⁺
+⊛-isMonoid = record
+  { isSemigroup = record
+    { isMagma = ⊛-isMagma
+    ; assoc = ⊛-assoc
+    }
+    ; identity = ⊛-identity
+  }
 
 ⊛-isCommutativeMonoid : IsCommutativeMonoid _≡_ _⊛_ 1⁺
-⊛-isCommutativeMonoid = record 
-  { isSemigroup = record
-    { isEquivalence = isEquivalence
-    ; assoc         = ⊛-assoc
-    ; ∙-cong        = cong₂ _⊛_
-    }
-  ; identityˡ = ⊛-leftIdentity
-  ; comm      = ⊛-comm
+⊛-isCommutativeMonoid = record
+  { isMonoid = ⊛-isMonoid
+    ; comm = ⊛-comm
   }
 
 cancel-+-left : ∀ x y z → z + x ≡ z + y → x ≡ y

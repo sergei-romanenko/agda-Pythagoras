@@ -12,8 +12,8 @@ module Corbineau.Sqrt2 where
 
 open import Data.Nat
   using (ℕ; zero; suc; _+_; _*_; ⌊_/2⌋; _<′_; ≤′-refl; _≟_)
-open import Data.Nat.Properties.Simple
-  using (+-suc; +-assoc; *-comm; distribʳ-*-+; +-right-identity)
+open import Data.Nat.Properties
+  using (+-suc; +-assoc; *-comm; *-distribʳ-+; +-identityʳ)
 open import Data.Nat.Properties
   using (s≤′s; ⌊n/2⌋≤′n)
 open import Data.Sum as Sum
@@ -32,8 +32,8 @@ open import Relation.Binary.PropositionalEquality as P
 
 open import Induction.WellFounded
   using (Acc; acc)
-open import Induction.Nat
-  using (<′-well-founded)
+open import Data.Nat.Induction
+  using (<′-wellFounded)
 
 infixr 8 2*_
 infixl 9 _^2
@@ -88,7 +88,7 @@ n ^2 = n * n
   2* (n * m)
     ≡⟨⟩
   n * m + n * m
-    ≡⟨ sym $ distribʳ-*-+ m n n ⟩
+    ≡⟨ sym $ *-distribʳ-+ m n n ⟩
   (n + n) * m
     ≡⟨ *-comm (n + n) m ⟩
   m * (n + n)
@@ -164,7 +164,7 @@ even-even+ (even1 (odd1 {m} even-m)) (even1 (odd1 even+)) =
 
 odd-even* : ∀ {m n} → Odd m → Even (m * n) → Even n
 odd-even* (odd1 even0) even-n+0 =
-  subst Even (+-right-identity _) even-n+0
+  subst Even (+-identityʳ _) even-n+0
 odd-even* {_} {n} (odd1 (even1 {m} odd-m)) =
   Even (n + (n + m * n))
     ∼⟨ subst Even (P.sym $ +-assoc n n (m * n)) ⟩
@@ -297,4 +297,4 @@ irrational-sqrt2 : ∀ m n → n ≢ 0 → ¬ (m ^2 ≡ 2* (n ^2))
 irrational-sqrt2 m n n≢0 m^2≡2*n^2 =
   n≢0 n≡0
   where n≡0 : n ≡ 0
-        n≡0 = descent m n m^2≡2*n^2 (<′-well-founded m)
+        n≡0 = descent m n m^2≡2*n^2 (<′-wellFounded m)

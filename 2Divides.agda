@@ -2,8 +2,8 @@ module 2Divides where
 
 open import Data.Nat
   using (ℕ; zero; suc; pred; _+_; _*_)
-open import Data.Nat.Properties.Simple
-  using (+-suc; +-assoc; +-right-identity)
+open import Data.Nat.Properties
+  using (+-suc; +-assoc; +-identityʳ)
 open import Data.Product as Prod
   using (_×_; _,_; ∃)
 open import Data.Sum as Sum
@@ -74,12 +74,12 @@ even-even+ (even1 (odd1 {m} even-m)) (even1 (odd1 even+)) =
 
 odd-even* : ∀ {m n} → Odd m → Even (m * n) → Even n
 odd-even* (odd1 even0) even-n+0 =
-  subst Even (+-right-identity _) even-n+0
+  subst Even (+-identityʳ _) even-n+0
 odd-even* {_} {n} (odd1 (even1 {m} odd-m)) =
   Even (n + (n + m * n))
     ≡⟨ cong Even (sym $ +-assoc n n (m * n)) ⟩
   Even ((n + n) + m * n)
-    ≡⟨ cong (λ l → Even ((n + l) + m * n)) (sym $ +-right-identity n) ⟩
+    ≡⟨ cong (λ l → Even ((n + l) + m * n)) (sym $ +-identityʳ n) ⟩
   Even (2 * n + m * n)
     ∼⟨ even-even+ (even-2* n) ⟩
   Even (m * n)

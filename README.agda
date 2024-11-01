@@ -15,7 +15,7 @@ import 2Divides
 import NatPlus
 
 -- The set of the natural numbers without zero and with multiplication
--- forms a cancellative abelian modoid.
+-- forms a cancellative abelian monoid.
 -- Thus, the square root of two is irrational.
 import Corollary
 

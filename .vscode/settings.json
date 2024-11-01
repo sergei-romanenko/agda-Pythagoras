@@ -1,0 +1,13 @@
+{
+    "editor.unicodeHighlight.allowedCharacters": {
+        "ℕ": true,
+        "′": true,
+        "⊤": true,
+        "×": true,
+        "∣": true,
+        "ℓ": true
+    },
+    "agdaMode.highlighting.getHighlightWithThemeColors": false,
+    "window.autoDetectColorScheme": false,
+    "agdaMode.connection.agdaLanguageServer": false
+}

@@ -9,7 +9,7 @@ module Danielsson.2IsPrime where
    using (⊥)
  open import Data.Fin as Fin
    using(Fin; toℕ)
- open import Data.Fin.Dec
+ open import Data.Fin.Properties
    using (all?)
  open import Data.Nat
    using (ℕ; _+_; zero; suc)

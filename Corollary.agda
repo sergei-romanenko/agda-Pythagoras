@@ -21,9 +21,9 @@ open import Function
 import Function.Related as Related
 
 open import Induction.WellFounded
-  using (Acc; acc; Well-founded; module Subrelation; module Inverse-image)
-open import Induction.Nat
-  using (<′-well-founded)
+  using (Acc; acc; WellFounded; module Subrelation; module InverseImage)
+open import Data.Nat.Induction
+  using (<′-wellFounded)
 
 open import NatPlus
 open import 2Divides
@@ -68,7 +68,7 @@ prime-2⁺ (x , p) (y , q) h
 ... | inj₂ 2∣y = inj₂ (∣⇒divides (y , q) 2∣y)
 
 
--- Well-founded (multiple 2⁺)
+-- WellFounded (multiple 2⁺)
 
 <′2* : ∀ x → Pos x → x <′ 2 * x
 <′2* zero ()
@@ -95,13 +95,12 @@ m <′⁺ n = fromℕ⁺ m <′ fromℕ⁺ n
   rewrite sym $ (cong fromℕ⁺ 2m≡n)
   = <′2* x p
 
+module Wf-<′⁺ = InverseImage {_<_ = _<′_} fromℕ⁺
+module Wf-2⁺*≡ = Subrelation {_<₁_ = multiple 2⁺} {_<₂_ = _<′⁺_} 2⁺*≡⇒<′⁺
 
-module Wf-<′⁺ = Inverse-image {A = ℕ⁺} {B = ℕ} {_<′_} fromℕ⁺
-module Wf-2⁺*≡ = Subrelation {A = ℕ⁺} {multiple 2⁺} {_<′⁺_} 2⁺*≡⇒<′⁺
-
-2⁺⊛-well-founded : Well-founded (multiple 2⁺)
+2⁺⊛-well-founded : WellFounded (multiple 2⁺)
 2⁺⊛-well-founded =
-  Wf-2⁺*≡.well-founded $ Wf-<′⁺.well-founded $ <′-well-founded
+  Wf-2⁺*≡.wellFounded $ Wf-<′⁺.wellFounded $ <′-wellFounded
 
 --
 -- 2⁺ is not rational.

@@ -29,7 +29,7 @@ open import Function
   using (_∘_; _$_; id)
 
 open import Induction.WellFounded
-  using (Acc; acc; Well-founded)
+  using (Acc; acc; WellFounded)
 
 
 open CancellativeAbelianMonoid {a} {a} m public
@@ -43,7 +43,7 @@ open CancellativeAbelianMonoid {a} {a} m public
            ; cancel to ∙-cancel
            )
 
-open import Relation.Binary.EqReasoning (≈-setoid)
+open import Relation.Binary.Reasoning.Setoid (≈-setoid)
 
 
 multiple : (p : Carrier) → Rel Carrier a
@@ -105,6 +105,6 @@ theorem′ p prime-p x u pxx≈uu (acc rs)
 ... | w , pw≈x , pww≈yy
   = theorem′ p prime-p w y pww≈yy (rs y py≈u)
 
-theorem : ∀ p → Prime p → Well-founded (multiple p) → NotSquare p
+theorem : ∀ p → Prime p → WellFounded (multiple p) → NotSquare p
 theorem p prime-p wfmp x u pxx≈uu =
   theorem′ p prime-p x u pxx≈uu (wfmp u)
