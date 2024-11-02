@@ -17,13 +17,14 @@ open import Data.Empty
   using (⊥)
 
 open import Function
-  using (_∘_; _$_)
+  using (_∘_; _$_; _|>_)
 import Function.Related as Related
 
 open import Induction.WellFounded
-  using (Acc; acc; WellFounded; module Subrelation; module InverseImage)
+  using (WellFounded; module Subrelation)
 open import Data.Nat.Induction
   using (<′-wellFounded)
+import Relation.Binary.Construct.On as On
 
 open import NatPlus
 open import 2Divides
@@ -34,7 +35,7 @@ isCancellativeAbelianMonoid :
   IsCancellativeAbelianMonoid _≡_ _⊛_ 1⁺
 isCancellativeAbelianMonoid = record
   { isCommutativeMonoid = ⊛-isCommutativeMonoid
-  ; cancel = cancel-⊛-left
+  ; cancel = ⊛-cancelˡ-≡
   }
 
 mnd : CancellativeAbelianMonoid lzero lzero
@@ -73,19 +74,16 @@ prime-2⁺ (x , p) (y , q) h
 <′2* : ∀ x → Pos x → x <′ 2 * x
 <′2* zero ()
 <′2* (suc zero) tt = ≤′-refl
-<′2* (suc (suc x)) tt = step (<′2* (suc x) tt)
-  where
-  open Related.EquationalReasoning hiding (sym)
-  step : 1 + x <′ 2 * (1 + x) → 2 + x <′ 2 * (2 + x)
-  step =
-    1 + x <′ 2 * (1 + x)
-      ∼⟨ ≤′-step ⟩
-    1 + x <′ 1 + 2 * (1 + x)
-      ∼⟨ s≤′s ⟩
-    2 + x <′ 2 + 2 * (1 + x)
-      ≡⟨ cong (_<′_ (2 + x))  (sym $ 2*-suc (1 + x)) ⟩
-    2 + x <′ 2 * (2 + x)
-    ∎
+<′2* (suc (suc x)) tt = <′2* (suc x) tt |>
+  1 + x <′ 2 * (1 + x)
+    ∼⟨ ≤′-step ⟩
+  1 + x <′ 1 + 2 * (1 + x)
+    ∼⟨ s≤′s ⟩
+  2 + x <′ 2 + 2 * (1 + x)
+    ≡⟨ cong (_<′_ (2 + x))  (sym $ 2*-suc (1 + x)) ⟩
+  2 + x <′ 2 * (2 + x)
+  ∎
+  where open Related.EquationalReasoning hiding (sym)
 
 _<′⁺_ : (m n : ℕ⁺) → Set
 m <′⁺ n = fromℕ⁺ m <′ fromℕ⁺ n
@@ -95,12 +93,11 @@ m <′⁺ n = fromℕ⁺ m <′ fromℕ⁺ n
   rewrite sym $ (cong fromℕ⁺ 2m≡n)
   = <′2* x p
 
-module Wf-<′⁺ = InverseImage {_<_ = _<′_} fromℕ⁺
-module Wf-2⁺*≡ = Subrelation {_<₁_ = multiple 2⁺} {_<₂_ = _<′⁺_} 2⁺*≡⇒<′⁺
+<′⁺-wellFounded : WellFounded (_<′⁺_)
+<′⁺-wellFounded = On.wellFounded fromℕ⁺ <′-wellFounded
 
-2⁺⊛-well-founded : WellFounded (multiple 2⁺)
-2⁺⊛-well-founded =
-  Wf-2⁺*≡.wellFounded $ Wf-<′⁺.wellFounded $ <′-wellFounded
+2⁺*≡-wellFounded : WellFounded (multiple 2⁺)
+2⁺*≡-wellFounded = Subrelation.wellFounded 2⁺*≡⇒<′⁺ <′⁺-wellFounded
 
 --
 -- 2⁺ is not rational.
@@ -108,4 +105,4 @@ module Wf-2⁺*≡ = Subrelation {_<₁_ = multiple 2⁺} {_<₂_ = _<′⁺_} 2
 
 corollary : NotSquare 2⁺
 corollary =
-  theorem 2⁺ prime-2⁺ 2⁺⊛-well-founded
+  theorem 2⁺ prime-2⁺ 2⁺*≡-wellFounded

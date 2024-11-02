@@ -11,11 +11,11 @@ open import Data.Sum as Sum
 open import Data.Empty
   using (⊥)
 
-open import Relation.Binary.PropositionalEquality as P
+open import Relation.Binary.PropositionalEquality
   using (_≡_; _≢_; refl; cong; cong₂; subst; sym; module ≡-Reasoning)
 
 open import Function
-  using (_∘_; _$_; id; flip)
+  using (_∘_; _$_; _|>_)
 import Function.Related as Related
 
 mutual
@@ -50,21 +50,19 @@ even-2* zero =
   even0
 even-2* (suc zero) =
   even1 (odd1 even0)
-even-2* (suc (suc n)) =
-  step $ even-2* n
+even-2* (suc (suc n)) = even-2* n |>
+  Even (2 * n)
+    ∼⟨ even1 ∘ odd1 ⟩
+  Even (suc (suc (2 *  n)))
+    ≡⟨ cong Even (sym $ 2*-suc n) ⟩
+  Even (2 * (suc n))
+    ∼⟨ even1 ∘ odd1 ⟩
+  Even (suc (suc (2 * (suc n))))
+    ≡⟨ cong Even (sym $ 2*-suc (suc n)) ⟩
+  Even (2 * suc (suc n))
+  ∎
   where
   open Related.EquationalReasoning hiding (sym)
-  step =
-    Even (2 * n)
-      ∼⟨ even1 ∘ odd1 ⟩
-    Even (suc (suc (2 *  n)))
-      ≡⟨ cong Even (P.sym $ 2*-suc n) ⟩
-    Even (2 * (suc n))
-      ∼⟨ even1 ∘ odd1 ⟩
-    Even (suc (suc (2 * (suc n))))
-      ≡⟨ cong Even (sym $ 2*-suc (suc n)) ⟩
-    Even (2 * suc (suc n))
-    ∎
 
 even-even+ : ∀ {m n} → Even m → Even (m + n) → Even n
 even-even+ even0 even-n =
@@ -112,9 +110,12 @@ even⇒2∣ {suc (suc k)} (even1 (odd1 even-k))
     ∎
 
 2∣⇒even : ∀ {n} → 2∣ n → Even n
-2∣⇒even {n} (x , 2*x≡n) = step $ even-2* x
+2∣⇒even {n} (x , 2*x≡n) = even-2* x |>
+  Even (2 * x)
+    ≡⟨ cong Even 2*x≡n ⟩
+  Even n
+  ∎
   where open Related.EquationalReasoning hiding (sym)
-        step = Even (2 * x) ≡⟨ cong Even 2*x≡n ⟩ Even n ∎
 
 even*⇒even⊎even : ∀ {m n} → Even (m * n) → Even m ⊎ Even n
 even*⇒even⊎even {m} {n} even-m*n

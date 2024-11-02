@@ -86,88 +86,83 @@ _⊛_ : (m n : ℕ⁺) → ℕ⁺
 ⊛-assoc (x , p) (y , q) (z , r) =
   ≈⁺⇒≡ $ *-assoc x y z
 
-⊛-leftIdentity : ∀ n → 1⁺ ⊛ n ≡ n
-⊛-leftIdentity (x , p) =
+⊛-identityˡ : ∀ n → 1⁺ ⊛ n ≡ n
+⊛-identityˡ (x , p) =
   ≈⁺⇒≡ $ +-identityʳ x
 
-⊛-rightIdentity : ∀ n → n ⊛ 1⁺ ≡ n
-⊛-rightIdentity (x , p) =
+⊛-identityʳ : ∀ n → n ⊛ 1⁺ ≡ n
+⊛-identityʳ (x , p) =
   ≈⁺⇒≡ $ *-identityʳ x
 
 ⊛-identity : Identity _≡_ 1⁺ _⊛_
-⊛-identity = (⊛-leftIdentity , ⊛-rightIdentity)
+⊛-identity = (⊛-identityˡ , ⊛-identityʳ)
 
 ⊛-comm : ∀ m n → m ⊛ n ≡  n ⊛ m
 ⊛-comm (x , p) (y , q) =
   ≈⁺⇒≡ $ *-comm x y
 
-⊛-isMagma : IsMagma _≡_  _⊛_
-⊛-isMagma = record
-  { isEquivalence = isEquivalence
-  ; ∙-cong        = cong₂ _⊛_
-  }
-
-⊛-isMonoid : IsMonoid _≡_ _⊛_ 1⁺
-⊛-isMonoid = record
-  { isSemigroup = record
-    { isMagma = ⊛-isMagma
-    ; assoc = ⊛-assoc
-    }
-    ; identity = ⊛-identity
-  }
-
 ⊛-isCommutativeMonoid : IsCommutativeMonoid _≡_ _⊛_ 1⁺
 ⊛-isCommutativeMonoid = record
-  { isMonoid = ⊛-isMonoid
-    ; comm = ⊛-comm
+  { isMonoid = record
+    { isSemigroup = record
+      { isMagma = record
+        { isEquivalence = isEquivalence
+        ; ∙-cong = cong₂ _⊛_
+        }
+      ; assoc = ⊛-assoc
+    }
+    ; identity = ⊛-identity
+    }
+  ; comm = ⊛-comm
   }
 
-cancel-+-left : ∀ x y z → z + x ≡ z + y → x ≡ y
-cancel-+-left x y zero x≡y = x≡y
-cancel-+-left x y (suc z) =
++-cancelˡ-≡ : ∀ x y z → z + x ≡ z + y → x ≡ y
++-cancelˡ-≡ x y zero x≡y =
+  x≡y
++-cancelˡ-≡ x y (suc z) =
   suc z + x ≡ suc z + y
     ≡⟨ refl ⟩
   suc (z + x) ≡ suc (z + y)
     ∼⟨ cong pred ⟩
   z + x ≡ z + y
-    ∼⟨ cancel-+-left x y z ⟩
+    ∼⟨ +-cancelˡ-≡ x y z ⟩
   x ≡ y
   ∎
   where open Related.EquationalReasoning
 
-cancel-*-right : ∀ x y z → x * suc z ≡ y * suc z → x ≡ y
-cancel-*-right zero zero z 0≡0 = 0≡0
-cancel-*-right zero (suc y) z ()
-cancel-*-right (suc x) zero z ()
-cancel-*-right (suc x) (suc y) z =
+*-cancelʳ-≡ : ∀ x y z → x * suc z ≡ y * suc z → x ≡ y
+*-cancelʳ-≡ zero zero z 0≡0 = 0≡0
+*-cancelʳ-≡ zero (suc y) z ()
+*-cancelʳ-≡ (suc x) zero z ()
+*-cancelʳ-≡ (suc x) (suc y) z =
   suc x * suc z ≡ suc y * suc z
     ≡⟨ refl ⟩
   suc (z + x * suc z) ≡ suc (z + y * suc z)
     ∼⟨ cong pred ⟩
   z + x * suc z ≡ z + y * suc z
-    ∼⟨ cancel-+-left (x * suc z) (y * suc z) z ⟩
+    ∼⟨ +-cancelˡ-≡ (x * suc z) (y * suc z) z ⟩
   x * suc z ≡ y * suc z
-    ∼⟨ cancel-*-right x y z ⟩
+    ∼⟨ *-cancelʳ-≡ x y z ⟩
   x ≡ y
     ∼⟨ cong suc ⟩
   suc x ≡ suc y
   ∎
   where open Related.EquationalReasoning
 
-cancel-*-left : ∀ x y z → suc z * x ≡ suc z * y → x ≡ y
-cancel-*-left x y z =
+*-cancelˡ-≡ : ∀ x y z → suc z * x ≡ suc z * y → x ≡ y
+*-cancelˡ-≡ x y z =
   suc z * x ≡ suc z * y
     ≡⟨ cong₂ _≡_ (*-comm (suc z) x) (*-comm (suc z) y) ⟩
   x * suc z ≡ y * suc z
-    ∼⟨ cancel-*-right x y z ⟩
+    ∼⟨ *-cancelʳ-≡ x y z ⟩
   x ≡ y
   ∎
   where open Related.EquationalReasoning
 
-cancel-⊛-left : ∀ m n k → k ⊛ m ≡ k ⊛ n → m ≡ n
-cancel-⊛-left (x , p) (y , q) (zero , ()) h
-cancel-⊛-left (x , p) (y , q) (suc z′ , tt) h
+⊛-cancelˡ-≡ : ∀ m n k → k ⊛ m ≡ k ⊛ n → m ≡ n
+⊛-cancelˡ-≡ (x , p) (y , q) (zero , ()) h
+⊛-cancelˡ-≡ (x , p) (y , q) (suc z′ , tt) h
   with ≡⇒≈⁺ h
-... | sz′*x≡sz′*y with cancel-*-left x y z′ sz′*x≡sz′*y
+... | sz′*x≡sz′*y with *-cancelˡ-≡ x y z′ sz′*x≡sz′*y
 ... | x≡y rewrite x≡y
   = cong (_,_ y) (irrel-pos p q)

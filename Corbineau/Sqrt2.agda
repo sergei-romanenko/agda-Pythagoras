@@ -22,12 +22,12 @@ open import Data.Empty
   using (⊥; ⊥-elim)
 
 open import Function
-  using (_∘_; _$_)
+  using (_∘_; _$_; _|>_)
 import Function.Related as Related
 
 open import Relation.Nullary
   using (Dec; yes; no; ¬_)
-open import Relation.Binary.PropositionalEquality as P
+open import Relation.Binary.PropositionalEquality
   using (_≡_; _≢_; refl; cong; cong₂; subst; sym; module ≡-Reasoning)
 
 open import Induction.WellFounded
@@ -58,7 +58,7 @@ n ^2 = n * n
 
 [2*]/2 : ∀ n → ⌊ 2* n /2⌋ ≡ n
 [2*]/2 zero = refl
-[2*]/2 (suc n) = begin
+[2*]/2 (suc n) =
   ⌊ 2* (suc n) /2⌋
     ≡⟨ cong ⌊_/2⌋ (2*-suc n) ⟩
   ⌊ suc (suc (2* n)) /2⌋
@@ -70,7 +70,7 @@ n ^2 = n * n
   where open ≡-Reasoning
 
 2*-inj : ∀ {m n} → 2* m ≡ 2* n → m ≡ n
-2*-inj {m} {n} 2*m≡2*n = begin
+2*-inj {m} {n} 2*m≡2*n =
   m
     ≡⟨ sym $ [2*]/2 m ⟩
   ⌊ 2* m /2⌋
@@ -82,7 +82,7 @@ n ^2 = n * n
   where open ≡-Reasoning
 
 2*-*-left : ∀ m n → 2* (m * n) ≡ m * (2* n)
-2*-*-left m n = begin
+2*-*-left m n =
   2* (m * n)
     ≡⟨ cong 2*_ (*-comm m n) ⟩
   2* (n * m)
@@ -98,7 +98,7 @@ n ^2 = n * n
   where open ≡-Reasoning
 
 2*-*-right : ∀ m n → 2* (m * n) ≡ (2* m) * n
-2*-*-right m n = begin
+2*-*-right m n =
   2* (m * n)
     ≡⟨ cong 2*_ (*-comm m n) ⟩
   2* (n * m)
@@ -129,25 +129,22 @@ even-2* zero =
   even0
 even-2* (suc zero) =
   even1 (odd1 even0)
-even-2* (suc (suc n)) =
-  step $ even-2* n
-  where
-  open Related.EquationalReasoning hiding (sym)
-  step =
-    Even (2* n)
-      ∼⟨ even1 ∘ odd1 ⟩
-    Even (suc (suc (2*  n)))
-      ≡⟨ cong Even (P.sym $ 2*-suc n) ⟩
-    Even (2* (suc n))
-      ∼⟨ even1 ∘ odd1 ⟩
-    Even (suc (suc (2* (suc n))))
-      ≡⟨ cong Even (sym $ 2*-suc (suc n)) ⟩
-    Even (2* suc (suc n))
-    ∎
+even-2* (suc (suc n)) = even-2* n |>
+  Even (2* n)
+    ∼⟨ even1 ∘ odd1 ⟩
+  Even (suc (suc (2*  n)))
+    ≡⟨ cong Even (sym $ 2*-suc n) ⟩
+  Even (2* (suc n))
+    ∼⟨ even1 ∘ odd1 ⟩
+  Even (suc (suc (2* (suc n))))
+    ≡⟨ cong Even (sym $ 2*-suc (suc n)) ⟩
+  Even (2* suc (suc n))
+  ∎
+  where open Related.EquationalReasoning hiding (sym)
 
 even-2*/2 : ∀ {n} → Even n → 2* ⌊ n /2⌋ ≡ n
 even-2*/2 even0 = refl
-even-2*/2 (even1 (odd1 {n} even-n)) = begin
+even-2*/2 (even1 (odd1 {n} even-n)) =
   2* (suc ⌊ n /2⌋)
     ≡⟨ 2*-suc ⌊ n /2⌋ ⟩
   suc (suc (2* ⌊ n /2⌋))
@@ -167,14 +164,14 @@ odd-even* (odd1 even0) even-n+0 =
   subst Even (+-identityʳ _) even-n+0
 odd-even* {_} {n} (odd1 (even1 {m} odd-m)) =
   Even (n + (n + m * n))
-    ∼⟨ subst Even (P.sym $ +-assoc n n (m * n)) ⟩
+    ∼⟨ subst Even (sym $ +-assoc n n (m * n)) ⟩
   Even ((n + n) + m * n)
     ∼⟨ even-even+ (even-2* n) ⟩
   Even (m * n)
     ∼⟨ odd-even* odd-m ⟩
   Even n
   ∎
-  where open Related.EquationalReasoning
+  where open Related.EquationalReasoning hiding (sym)
 
 even^2 : ∀ {n} → Even (n ^2) → Even n
 even^2 {n} even* with even⊎odd n
@@ -193,7 +190,7 @@ odd-2*/2 (odd1 (even1 {n} odd-n)) =
   where open ≡-Reasoning
 
 even-4*[/2^2] : ∀ n → Even n → 2* 2* (⌊ n /2⌋ ^2) ≡ n ^2
-even-4*[/2^2] n even-n = begin
+even-4*[/2^2] n even-n =
   2* 2* (⌊ n /2⌋ * ⌊ n /2⌋)
     ≡⟨ cong 2*_ (2*-*-left ⌊ n /2⌋ ⌊ n /2⌋) ⟩
   2* (⌊ n /2⌋ * 2* ⌊ n /2⌋)
@@ -225,10 +222,14 @@ descent : ∀ m p → m ^2 ≡ 2* (p ^2) → Acc _<′_ m → p ≡ 0
 
 descent m p m^2≡2*p^2 a with m ≟ 0
 
-descent m p m^2≡2*p^2 a | yes m≡0 rewrite m≡0 =
-  2* (p ^2) ≡ 0 ∼⟨ 2*-inj ⟩ p ^2 ≡ 0 ∼⟨ ^2-≡0 ⟩ p ≡ 0
-  ∎ $ P.sym m^2≡2*p^2
-  where open Related.EquationalReasoning
+descent m p m^2≡2*p^2 a | yes m≡0 rewrite m≡0 = sym m^2≡2*p^2 |>
+  2* (p ^2) ≡ 0
+    ∼⟨ 2*-inj ⟩
+  p ^2 ≡ 0
+    ∼⟨ ^2-≡0 ⟩
+  p ≡ 0
+  ∎
+  where open Related.EquationalReasoning hiding (sym)
 
 descent m p m^2≡2*p^2 (acc rs) | no m≢0 =
   p≡0
@@ -238,38 +239,42 @@ descent m p m^2≡2*p^2 (acc rs) | no m≢0 =
   q = ⌊ p /2⌋
 
   even-m : Even m
-  even-m =
+  even-m = even-2* (p ^2) |>
     Even (2* (p ^2))
-      ≡⟨ cong Even (P.sym $ m^2≡2*p^2) ⟩
+      ≡⟨ cong Even (sym $ m^2≡2*p^2) ⟩
     Even (m ^2)
       ∼⟨ even^2 ⟩
     Even m
-    ∎ $ even-2* (p ^2)
-    where open Related.EquationalReasoning
+    ∎
+    where open Related.EquationalReasoning hiding (sym)
 
   4*n^2≡m^2 : 2* 2* (n ^2) ≡ m ^2
   4*n^2≡m^2 = even-4*[/2^2] m even-m
 
   4*n^2≡2*p^2 : 2* 2* (n ^2) ≡ 2* (p ^2)
-  4*n^2≡2*p^2 = begin
-    2* 2* (n ^2) ≡⟨ 4*n^2≡m^2 ⟩ m ^2 ≡⟨ m^2≡2*p^2 ⟩ 2* (p ^2) ∎
+  4*n^2≡2*p^2 =
+    2* 2* (n ^2)
+      ≡⟨ 4*n^2≡m^2 ⟩
+    m ^2
+      ≡⟨ m^2≡2*p^2 ⟩
+    2* (p ^2) ∎
     where open ≡-Reasoning
 
   2*n^2≡p^2 : 2* (n ^2) ≡ p ^2
   2*n^2≡p^2 = 2*-inj 4*n^2≡2*p^2
 
   even-p : Even p
-  even-p =
+  even-p = even-2* (n ^2) |>
     Even (2* (n ^2))
       ≡⟨ cong Even  2*n^2≡p^2  ⟩
     Even (p ^2)
       ∼⟨ even^2 ⟩
     Even p
-    ∎ $ even-2* (n ^2)
+    ∎
     where open Related.EquationalReasoning
 
   4*n^2≡8*q^2 : 2* 2* (n ^2) ≡ 2* 2* 2* (q ^2)
-  4*n^2≡8*q^2 = begin
+  4*n^2≡8*q^2 =
     2* 2* (n ^2)
       ≡⟨ 4*n^2≡2*p^2 ⟩
     2* (p ^2)
@@ -285,8 +290,13 @@ descent m p m^2≡2*p^2 (acc rs) | no m≢0 =
   q≡0 = descent n q n^2≡2*q^2 (rs n (/2<′ m m≢0))
 
   p≡0 : p ≡ 0
-  p≡0 = begin
-    p ≡⟨ sym $ even-2*/2 even-p ⟩ 2* q ≡⟨ cong 2*_ q≡0 ⟩ 2* 0 ≡⟨⟩ 0 ∎
+  p≡0 =
+    p
+      ≡⟨ sym $ even-2*/2 even-p ⟩ 2*
+    q
+      ≡⟨ cong 2*_ q≡0 ⟩ 2* 0 ≡⟨⟩
+    0
+    ∎
     where open ≡-Reasoning
 
 --  There is no m and n such that

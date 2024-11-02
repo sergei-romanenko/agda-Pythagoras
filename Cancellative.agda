@@ -17,7 +17,7 @@ module _ {a l} {A : Set a} (_≈_ : Rel A l) (_∙_ : Op₂ A) where
   Cancel : Set (l ⊔ a)
   Cancel = ∀ x y z → (z ∙ x) ≈ (z ∙ y) → x ≈ y
 
-record IsCancellativeAbelianMonoid 
+record IsCancellativeAbelianMonoid
   {a l} {A : Set a} (≈ : Rel A l) (_∙_ : Op₂ A)
   (ε : A) : Set (a ⊔ l)
   where
