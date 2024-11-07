@@ -71,7 +71,9 @@ This version tries to exploit the the Agda standard library.
 
 ---
 
-## Versions
+## Agda and stdlib versions
 
-- Agda 2.6.2.
-- stdlib 1.7.
+This version is compatible with
+
+* Agda 2.6.4
+* The Standard Library 1.7.3

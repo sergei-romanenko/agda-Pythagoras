@@ -15,6 +15,8 @@ open import Data.Sum
   using (_⊎_; inj₁; inj₂)
 open import Data.Empty
   using (⊥)
+open import Data.Unit
+  using (⊤; tt)
 
 open import Function
   using (_∘_; _$_; _|>_)
